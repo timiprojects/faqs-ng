@@ -128,6 +128,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
             
                 res.render('space/dashboard', {
                     user: req.user,
+                    project: projId,
                     proj_id: projId._id,
                     title: req.params.f,
                     categories: categoryList,
@@ -160,6 +161,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
 
             res.render('space/dashboard', {
                 user: req.user,
+                project: projId,
                 proj_id: projId._id,
                 title: req.params.f,
                 categories: cat,
