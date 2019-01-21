@@ -1,0 +1,37 @@
+<div class="cover nav navbar">
+    <h3 class="" style="text-transform:capitalize;">
+        <%= title %>
+    </h3>
+</div>
+<div class="row">
+    <dv class="col-md-6">
+        <h5 class="text-muted" style="font-weight: 100;">Generate code to put on your website</h5>
+        <fieldset>
+            <form action="" class="form py-3">
+                <div class="input-group mb-2">
+                    <input type="text" class="form-control" placeholder="secret key">
+                    <button type="button" class="btn btn-info">Generate Key</button>
+                </div>
+                <div class="form-group mb-2">
+                    <label for="categories">Categories to display</label>
+                    <select name="categories" id="categories" class="form-control">
+                        <option value="">List1</option>
+                    </select>
+                </div>
+                <div class="form-group mb-2">
+                    <button type="button" class="btn btn-warning">Generate Code</button>
+                </div>
+            </form>
+        </fieldset>
+    </dv>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="text-info" style="font-weight:200;">Copy Generated Code below</h4>
+            </div>
+            <div class="card-body p-2">
+                <textarea name="codebase" id="codebase" cols="" rows="5" class="form-control"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
