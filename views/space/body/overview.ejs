@@ -11,11 +11,33 @@
 </nav>
 <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <% if(typeof user != 'undefined') { %>
-        <p>
-            <%= user.name %>
-        </p>
-        <% } %>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-info">
+                    Categories 
+                    <span class="badge badge-light">
+                        <% if (typeof project !== 'undefined') { let len = project.category%> 
+                            <%= len.length %>
+                        <% } %>
+                    </span>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    All Questions 
+                    <span class="badge badge-light">
+                        <% if (typeof project !== 'undefined') { 
+                            let category = project.category
+                            let val = []
+                            for(let i = 0; i < category.length; i++) {
+                                val.push(category[i].question.length)
+                            }
+                            let total = val.reduce((a,b) => a + b, 0)
+                            %> 
+                            <%= total %>
+                        <% } %>
+                    </span>
+                </button>
+            </div>
+        </div>
     </div>
     <!-- <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->

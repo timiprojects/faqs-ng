@@ -55,7 +55,7 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
 })
 
 //DELETE FAQ PAGE
-router.post('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
+router.delete('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
     const {
         del
     } = req.params
@@ -70,16 +70,19 @@ router.post('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
         if (projects) {
             var index = projects.findIndex(x => x._id == del);
             if(index) {
+                projects.splice(index, 1);
 
+                user.save().then(() => {
+                    req.flash(
+                        'success_msg',
+                        'Project deleted successfully'
+                    )
+                    res.redirect('/v2/project');
+                }).catch(err => {
+                    throw err;
+                })
             }
-            // projects.splice(index, 1);
-
-            // user.save().then(() => {
-            //     req.flash('Project deleted!')
-            //     res.redirect('/v2/project');
-            // }).catch(err => {
-            //     throw err;
-            // })
+            
         }
     })
 })
@@ -190,13 +193,6 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                             alias: req.body.alias
                         })
                         user.save().then(response => {
-                            // res.render('space/dashboard', {
-                            //     user: req.user,
-                            //     title: req.params.f,
-                            //     proj_id: proj._id,
-                            //     categories: proj.category,
-                            //     success_msg: `Category created successfully`
-                            // })
                             req.flash(
                                 'success_msg',
                                 'Category created successfully'
@@ -228,14 +224,6 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                                 cat: req.body.cats
                             })
                             user.save().then(response => {
-                                //console.log(response)
-                                // res.render('space/dashboard', {
-                                //     user: req.user,
-                                //     title: req.params.f,
-                                //     proj_id: proj._id,
-                                //     categories: proj.category,
-                                //     success_msg: `Question created successfully`
-                                // })
                                 req.flash(
                                     'success_msg',
                                     'Question created successfully'
@@ -247,7 +235,6 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                         }
                     }
                 }
-
             }
         }
     })
@@ -258,7 +245,6 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
 router.delete('/v2/project/:id/:f/:del', (req, res) => {
     User.findById(req.user._id, (err, user) => {
         if (err) throw err;
-
         if (user.project) {
             var proj = user.project.find(proj => proj._id == req.params.id)
             if (proj) {
@@ -267,9 +253,9 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
                 tim.splice(fin, 1)
                 user.save().then((response) => {
                     //console.log('Deleted')
-                    req.flash('category deleted!')
-                    res.status(200).json('Deleted');
-                    // res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                    req.flash('success_msg', 'category deleted!')
+                    //res.status(200).json('Deleted');
+                    res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
                 }).catch((err) => {
                     throw err;
                 })

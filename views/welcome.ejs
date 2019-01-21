@@ -19,9 +19,10 @@
                                 <%= project.date.toString('d:m:y') %></span>
                         </small>
                     </a>
-                    <form action="/v2/project/del/<%= project._id %>" method="POST" class="belt">
+                    <!-- <form action="/v2/project/del/<%= project._id %>" method="POST" class="belt">
                         <button type="submit" class="btn btn-link text-danger" style="display:block;padding:0;margin:0;text-align: right !important;"><i class="fas fa-trash"></i></button>
-                    </form>
+                    </form> -->
+                    <button class="btn btn-link text-danger belt" onclick="removeproject('<%= project._id %>')"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
             <% }) %>
