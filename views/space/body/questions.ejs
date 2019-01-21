@@ -18,7 +18,7 @@
         </div>
         <div class=" data-cover my-2">
             <ul class="ul accordion my-2" id="accordionExample">
-                <% if(categories && questions) { %>
+                <% if(questions) { %>
                 <% for(let i = 0; i < questions.length ; i++) { 
                     let qval = questions[i];
                     let ids = qval.question.replace(/[\?.,\s]/g, '').toLowerCase(); %>

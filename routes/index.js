@@ -112,7 +112,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
         var len = cat.length
 
         if (req.params.f === 'categories') {
-            var pageCount = ((cat.length / per_page) + 1).toFixed()
+            var pageCount = cat.length / per_page
 
             while (cat.length > 0) {
                 categoryArray.push(cat.splice(0, per_page))
@@ -146,7 +146,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 }
             }
 
-            var pageCount = ((questionNewList.length / per_page)).toFixed()
+            var pageCount = questionNewList.length / per_page
 
             while (questionNewList.length > 0) {
                 questionArray.push(questionNewList.splice(0, per_page))
