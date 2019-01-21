@@ -1,0 +1,17 @@
+<% include ../partials/header %>
+<div class="rows">
+    <% include ../partials/sidebar %>
+    <main class="right">
+        <div class="container-fluid">
+            <section>
+               <% if(typeof title != 'undefined') { %>
+                <%- include('./body/' + title) %>
+               <% } %>
+            </section>
+        </div>
+        <footer class="footer">
+            <small class="footer-text">Copyright &copy; 2019</small>
+        </footer>
+    </main>
+    
+</div>

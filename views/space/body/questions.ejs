@@ -1,0 +1,103 @@
+<div class="cover nav navbar">
+    <h3 class="" style="text-transform:capitalize;">
+        <%= title %>
+    </h3>
+    <a href="#modal" data-toggle="modal" class="btn btn-sm btn-info">&plus; New Question</a>
+</div>
+<% include ../../partials/message %>
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+            aria-controls="nav-home" aria-selected="true">All Questions</a>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="search">
+            <% include ../../partials/pagination %>
+        </div>
+        <div class=" data-cover my-2">
+            <ul class="ul accordion my-2" id="accordionExample">
+                <% if(typeof user.project != 'undefined') { %>
+                <% for(let i = 0; i < questions.length ; i++) { 
+                    let qval = questions[i];
+                    let ids = qval.question.replace(/[\?.,\s]/g, '').toLowerCase(); %>
+                <li class="list-item my-2 card-new">
+                    <div class="card-header btn-control" id="headingOne">
+                        <input type="text" value="<%= qval.question %>" class="list-control">
+                        <div class="cat-structure">
+                            <% categories.forEach(function(elem) { 
+                                if(elem._id == qval.cat) { %>
+                                    <small style="font-style: italic; font-weight: 500;">
+                                        <%= elem.title %></small>
+                            <% } }) %>
+                        </div>
+                        <div class="flex-end">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#<%= ids %>" aria-expanded="true"
+                                aria-controls="<%= ids %>">view <i class="fas fa-arrow-down"></i></button>
+                            <button class="btn btn-link text-success"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-link text-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div id="<%= ids %>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <%= qval.answer %>
+                        </div>
+                    </div>
+                </li>
+                <% } %>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+    <!-- 
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->
+</div>
+
+
+
+<div class="modal fade show" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create question</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/v2/project/<%= proj_id %>/<%= title %>" method="POST">
+                <div class="modal-body">
+                    <input type="text" name="userId" id="userId" value="<%= user._id %>" hidden="hidden">
+                    <div class="form-group">
+                        <label for="question">Question</label>
+                        <input type="text" name="question" id="question" class="form-control" value="<%= typeof question !== 'undefined' ? question : '' %>"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select name="cats" id="cats" class="form-control" required>
+                            <!-- <option value="0" selected="selected">Select Category</option> -->
+                            <% if(typeof user.project != 'undefined') { %>
+                            <% categories.forEach(function(category) { %>
+                            <option value="<%= category._id %>">
+                                <%= category.title %>
+                            </option>
+                            <% }) %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="alias">Answer</label>
+                        <textarea type="text" name="answer" id="answer" class="form-control" value="<%= typeof answer !== 'undefined' ? answer : '' %>"
+                            required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<% include ./partials/header %>
+<div class="container">
+    <div class="mx-auto ml-auto pt-3">
+        <% include ./partials/message %>
+        <div class="cover nav navbar">
+            <h6>PROJECTS</h6>
+            <a href="#modal" data-toggle="modal" class="btn btn-sm btn-info">&plus; New Project</a>
+        </div>
+        <div class="row pt-3">
+            <% if(typeof user.project !== 'undefined') { %>
+            <% user.project.forEach(function(project) { %>
+            <div class="col-md-3 mt-3">
+                <a href="/v2/project/<%= project._id %>/overview" class="card p-3 project">
+                    <h5 class="text-info light"><span>
+                            <%= project.title %></span> &rarr;</h5>
+                    <small class="text-muted">
+                        <strong>Created: </strong><span>
+                            <%= project.date.toString('d:m:y') %></span>
+                    </small>
+                </a>
+            </div>
+            <% }) %>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade show" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create new project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/v2/project" method="POST">
+                <div class="modal-body">
+                    <input type="text" name="userId" id="userId" value="<%= user._id %>" hidden="hidden">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" name="title" id="title" class="form-control" value="<%= typeof title !== 'undefined' ? title : '' %>"
+                            required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

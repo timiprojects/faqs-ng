@@ -1,0 +1,17 @@
+<div class="sidebar">
+    <div class="container">
+        <small class="text-dark">CONTEXT 
+            <% if(typeof project != 'undefined') { %>
+                <strong class="text-info" style="text-transform:capitalize;">[<%= project.title %>]</strong>
+            <% } %>
+        </small>
+        <ul class="nav">
+            <li class="nav-item"><a href="overview" class="nav-link"><i class="fas fa-snowflake">&nbsp;</i>Overview</a></li>
+            <li class="nav-item"><a href="categories" class="nav-link"><i class="fas fa-list-ol">&nbsp;</i>Categories</a></li>
+            <li class="nav-item"><a href="questions" class="nav-link"><i class="fas fa-question-circle">&nbsp;</i>Questions</a></li>
+            <li class="nav-item"><a href="settings" class="nav-link"><i class="fas fa-cog">&nbsp;</i>Settings</a></li>
+            <div class="dropdown-divider"></div>
+            <li class="nav-item"><a href="" class="nav-link"><i class="fas fa-headset">&nbsp;</i>Support</a></li>
+        </ul>
+    </div>
+</div>
