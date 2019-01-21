@@ -124,16 +124,19 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
             }
 
             categoryList = categoryArray[+current_page - 1];
-            res.render('space/dashboard', {
-                user: req.user,
-                proj_id: projId._id,
-                title: req.params.f,
-                categories: categoryList,
-                per_page,
-                totalCategories: len,
-                pageCount,
-                current_page
-            });
+
+            
+                res.render('space/dashboard', {
+                    user: req.user,
+                    proj_id: projId._id,
+                    title: req.params.f,
+                    categories: categoryList,
+                    per_page,
+                    totalCategories: len,
+                    pageCount,
+                    current_page
+                })
+            
         } else if (req.params.f === 'questions') {
             for (let index = 0; index < cat.length; index++) {
                 var rev = cat[index].question;

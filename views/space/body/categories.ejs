@@ -18,7 +18,7 @@
         </div>
         <div class=" data-cover my-2">
             <ul class="list tab-cover">
-                <% if(typeof user.project != 'undefined') { %>
+                <% if(categories) { %>
                 <% categories.forEach(function(category) { %>
                 <li class="list-item">
                     <input type="text" value="<%= category.title %>" class="list-control">
@@ -38,6 +38,10 @@
                     </nav>
                 </li>
                 <% }) %>
+                <% } else { %>
+                    <li class="list-item">
+                        No data to display
+                    </li>
                 <% } %>
             </ul>
         </div>
