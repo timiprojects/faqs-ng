@@ -10,14 +10,19 @@
             <% if(typeof user.project !== 'undefined') { %>
             <% user.project.forEach(function(project) { %>
             <div class="col-md-3 mt-3">
-                <a href="/v2/project/<%= project._id %>/overview" class="card p-3 project">
-                    <h5 class="text-info light"><span>
-                            <%= project.title %></span> &rarr;</h5>
-                    <small class="text-muted">
-                        <strong>Created: </strong><span>
-                            <%= project.date.toString('d:m:y') %></span>
-                    </small>
-                </a>
+                <div class="card p-3 project">
+                    <a href="/v2/project/<%= project._id %>/overview">
+                        <h5 class="text-info light"><span>
+                                <%= project.title %></span> &rarr;</h5>
+                        <small class="text-muted">
+                            <strong>Created: </strong><span>
+                                <%= project.date.toString('d:m:y') %></span>
+                        </small>
+                    </a>
+                    <form action="/v2/project/del/<%= project._id %>" method="POST" class="belt">
+                        <button type="submit" class="btn btn-link text-danger" style="display:block;padding:0;margin:0;text-align: right !important;"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
             </div>
             <% }) %>
             <% } %>

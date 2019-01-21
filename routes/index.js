@@ -12,26 +12,20 @@ router.get('/', (req, res) => res.render('index'))
 
 router.get('/v2/project', ensureAuthenticated, (req, res) => {
     res.render('welcome', {
-        user: req.user,
+        user: req.user
     })
 
 })
 
+//CREATE NEW FAQ PAGE
 router.post('/v2/project', ensureAuthenticated, (req, res) => {
     const {
         title,
         userId
     } = req.body
     let errors = []
-    User.findById(req.body.userId, (err, user) => {
+    User.findById(userId, (err, user) => {
         if (err) throw err;
-
-        // user.project.push({title})
-        // user.save().then((usr) => {
-        //     res.render('welcome', {
-        //         user: usr
-        //     })
-        // }).catch((err) => console.log(err))
 
         var proj = user.project.find(proj => proj.title === title)
         if (proj) {
@@ -44,7 +38,7 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
             res.render('welcome', {
                 errors,
                 title,
-                user: req.user
+                user: req.user,
             })
         } else {
             user.project.push({
@@ -60,46 +54,37 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
     })
 })
 
-//router.post()
+//DELETE FAQ PAGE
+router.post('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
+    const {
+        del
+    } = req.params
+    const {
+        _id
+    } = req.user
 
-//dashboard
-// router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
-//     var {
-//         project
-//     } = req.user
-//     var projId = project.find(proj => proj._id == req.params.id)
+    User.findById(_id, (err, user) => {
+        if (err) throw err;
+        var projects = user.project
 
-//     if (projId) {
-//         if (req.params.f === 'categories') {
-//             res.render('space/dashboard', {
-//                 user: req.user,
-//                 title: req.params.f,
-//                 proj_id: projId._id,
-//                 categories: projId.category
-//             })
-//         } else if (req.params.f === 'questions') {
-//             var count = projId.category
-//             res.render('space/dashboard', {
-//                 user: req.user,
-//                 title: req.params.f,
-//                 proj_id: projId._id,
-//                 categories: count
-//             })
-//         } else {
-//             res.render('space/dashboard', {
-//                 user: req.user,
-//                 title: req.params.f,
-//                 project: projId
-//             })
-//         }
-//     } else {
-//         req.flash('No project exits!')
-//         res.redirect('/v2/project');
-//     }
+        if (projects) {
+            var index = projects.findIndex(x => x._id == del);
+            if(index) {
 
+            }
+            // projects.splice(index, 1);
 
-// })
+            // user.save().then(() => {
+            //     req.flash('Project deleted!')
+            //     res.redirect('/v2/project');
+            // }).catch(err => {
+            //     throw err;
+            // })
+        }
+    })
+})
 
+//GET ALL DATA FOR ONE FAQ PAGE 
 router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
     var {
         project
@@ -121,28 +106,21 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
 
         var cat = projId.category
 
-        
-
         var len = cat.length
 
-        //console.log(pageCount)
-
-        //console.log(categoryList)
         if (req.params.f === 'categories') {
             var pageCount = ((cat.length / per_page) + 1).toFixed()
 
             while (cat.length > 0) {
                 categoryArray.push(cat.splice(0, per_page))
             }
-    
+
             //set current page if specifed as get variable (eg: /?page=2)
             if (typeof req.query.page !== 'undefined') {
                 current_page = +req.query.page;
             }
-    
+
             categoryList = categoryArray[+current_page - 1];
-
-
             res.render('space/dashboard', {
                 user: req.user,
                 proj_id: projId._id,
@@ -154,20 +132,17 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 current_page
             });
         } else if (req.params.f === 'questions') {
-            for(let index = 0; index < cat.length; index++) {
+            for (let index = 0; index < cat.length; index++) {
                 var rev = cat[index].question;
 
-                for(let i = 0; i < rev.length; i++) {
+                for (let i = 0; i < rev.length; i++) {
                     questionNewList.push(rev[i])
                 }
             }
 
             var pageCount = ((questionNewList.length / per_page)).toFixed()
 
-            console.log(questionNewList.length)
-            console.log(pageCount)
-
-            while(questionNewList.length > 0) {
+            while (questionNewList.length > 0) {
                 questionArray.push(questionNewList.splice(0, per_page))
             }
 
@@ -195,15 +170,10 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 project: projId
             })
         }
-
-        //console.log("current_page: " + current_page)
     }
-
-
-
 })
 
-
+//CREATE CATEGORIES AND QUESTIONS FOR A FAQ PAGE
 router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
     User.findById(req.user._id, (err, user) => {
         if (err) throw err;
@@ -227,18 +197,20 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                             //     categories: proj.category,
                             //     success_msg: `Category created successfully`
                             // })
+                            req.flash(
+                                'success_msg',
+                                'Category created successfully'
+                            );
                             res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
                         }).catch((err) => {
                             throw err;
                         })
                     } else {
-                        res.render('space/dashboard', {
-                            user: req.user,
-                            title: req.params.f,
-                            proj_id: proj._id,
-                            categories: proj.category,
-                            error_msg: `Category already exists`
-                        })
+                        req.flash(
+                            'success_msg',
+                            'Category already exists'
+                        );
+                        res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
                     }
                 } else if (req.params.f === 'questions') {
                     var getCat = proj.category
@@ -257,13 +229,18 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                             })
                             user.save().then(response => {
                                 //console.log(response)
-                                res.render('space/dashboard', {
-                                    user: req.user,
-                                    title: req.params.f,
-                                    proj_id: proj._id,
-                                    categories: proj.category,
-                                    success_msg: `Question created successfully`
-                                })
+                                // res.render('space/dashboard', {
+                                //     user: req.user,
+                                //     title: req.params.f,
+                                //     proj_id: proj._id,
+                                //     categories: proj.category,
+                                //     success_msg: `Question created successfully`
+                                // })
+                                req.flash(
+                                    'success_msg',
+                                    'Question created successfully'
+                                );
+                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
                             }).catch((err) => {
                                 throw err;
                             })
@@ -276,6 +253,8 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
     })
 })
 
+
+//DELETE QUESTIONS AND CATEGORIES FROM A FAQ PAGE
 router.delete('/v2/project/:id/:f/:del', (req, res) => {
     User.findById(req.user._id, (err, user) => {
         if (err) throw err;
@@ -292,7 +271,7 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
                     res.status(200).json('Deleted');
                     // res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
                 }).catch((err) => {
-                    console.log(err)
+                    throw err;
                 })
             }
         }
