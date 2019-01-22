@@ -11,10 +11,12 @@ async function removeproject(projId) {
 }
 
 //DELETE QUESTIONS OR CATEGORIES
-async function Delete(projId, catId, link) {
+async function Delete(projId, catId, link, qId) {
     let isBool = confirm('Are you sure you want to DELETE?')
     if(isBool) {
-        var data = await fetch(`${location.origin}/v2/project/${projId}/${link}/${catId}`, { method: 'DELETE'})
+        var data = await fetch(`${location.origin}/v2/project/${projId}/${link}/${catId}`, 
+        { method: 'DELETE', body: qId}
+        )
         var res = await data
         if(res.redirected) {
             location.href = res.url

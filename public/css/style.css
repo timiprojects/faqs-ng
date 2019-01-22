@@ -58,8 +58,14 @@ header {
     width: 180px;
     height: 100%;
 }
+a:hover {
+   color: #369 !important
+}
 .sidebar .nav-link {
     font-weight: 500;
+}
+.nav-link.active{
+    color: #369 !important;
 }
 .project {
     position: relative;

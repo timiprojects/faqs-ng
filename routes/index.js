@@ -254,16 +254,36 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
             var proj = user.project.find(proj => proj._id == req.params.id)
             if (proj) {
                 var tim = proj.category
-                var fin = tim.findIndex(x => x._id == req.params.del)
-                tim.splice(fin, 1)
-                user.save().then((response) => {
-                    //console.log('Deleted')
-                    req.flash('success_msg', 'category deleted!')
-                    //res.status(200).json('Deleted');
-                    res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
-                }).catch((err) => {
-                    throw err;
-                })
+                if(req.params.f === 'categories') {
+                    var fin = tim.findIndex(x => x._id == req.params.del)
+                    tim.splice(fin, 1)
+                    user.save().then((response) => {
+                        //console.log('Deleted')
+                        req.flash('success_msg', 'category deleted!')
+                        //res.status(200).json('Deleted');
+                        res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                    }).catch((err) => {
+                        throw err;
+                    })
+                } else if (req.params.f === 'questions') {
+                    var findCat = tim.find(x => x._id == req.params.del)
+                    if(findCat) {
+                        var checkQuestion = findCat.question
+                        var findQuestion = checkQuestion.findIndex(x => x._id == req.body.qId)
+                        if(findQuestion) {
+                            checkQuestion.splice(findQuestion, 1)
+                            user.save().then((response) => {
+                                //console.log('Deleted')
+                                req.flash('success_msg', 'question deleted!')
+                                //res.status(200).json('Deleted');
+                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                            }).catch((err) => {
+                                throw err;
+                            })
+                        }
+                    }
+                }
+                
             }
         }
     })
