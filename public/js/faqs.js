@@ -42,7 +42,7 @@ function genCode (pId, usrId) {
     if(elem.value && !elem.value.length < 10 && pId !== '' && usrId !== '') {
         //console.log(elem.value)
         codebase.innerHTML = `
-        <iframe src="${location.origin}/v2/${pId}/${elem.value}/${usrId}" style="display:block;width:100%; border: none !important;"></iframe>
+        <iframe src="${location.origin}/v2/${pId}/${elem.value}/${usrId}" style="display:block;width:100%; border: none !important;height:calc(100vh - 100px);"></iframe>
         `
     }
 }
