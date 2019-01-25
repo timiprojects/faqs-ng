@@ -9,11 +9,11 @@
         <fieldset>
             <form action="" class="form py-3">
                 <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="secret key">
-                    <button type="button" class="btn btn-info">Generate Key</button>
+                    <input type="text" class="form-control" placeholder="secret key" name="seckey" id="seckey" value="">
+                    <button type="button" class="btn btn-info" onclick="generateKey()">Generate Key</button>
                 </div>
                 <div class="form-group mb-2">
-                    <button type="button" class="btn btn-warning">Generate Code</button>
+                    <button type="button" class="btn btn-warning" onclick="genCode('<%= project._id %>', '<%= user._id %>')">Generate Code</button>
                 </div>
             </form>
         </fieldset>
@@ -24,7 +24,7 @@
                 <h4 class="text-info" style="font-weight:200;">Copy Generated Code below</h4>
             </div>
             <div class="card-body p-2">
-                <textarea name="codebase" id="codebase" cols="" rows="5" class="form-control"></textarea>
+                <textarea name="codebase" id="codebase" cols="" rows="5" class="form-control" readonly></textarea>
             </div>
         </div>
     </div>

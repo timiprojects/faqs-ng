@@ -92,7 +92,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
     var {
         project
     } = req.user
-    var per_page = 8
+    var per_page = 10
 
     var categoryArray = []
     var categoryList = []
@@ -112,7 +112,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
         var len = cat.length
 
         if (req.params.f === 'categories') {
-            var pageCount = cat.length / per_page
+            var pageCount = Math.round((cat.length / per_page) + 0.5)
 
             while (cat.length > 0) {
                 categoryArray.push(cat.splice(0, per_page))
@@ -147,15 +147,17 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 }
             }
 
-            var pageCount = questionNewList.length / per_page
+            var pageCount = Math.round((questionNewList.length / per_page) + 0.5)
 
             while (questionNewList.length > 0) {
                 questionArray.push(questionNewList.splice(0, per_page))
             }
 
             if (typeof req.query.page !== 'undefined') {
-                current_page = req.query.page || 1;
+                current_page = +req.query.page || 1;
             }
+
+            
 
             questionList = questionArray[+current_page - 1]
 
@@ -171,6 +173,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 pageCount,
                 current_page
             });
+
         } else {
             res.render('space/dashboard', {
                 user: req.user,
@@ -243,6 +246,23 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
             }
         }
     })
+})
+
+router.get('/v2/:pid/:seckey/:usrId', (req, res) => {
+    var seckey = req.params.seckey
+    if(typeof seckey !== 'undefined' && !seckey.length < 10) {
+        User.findById(req.params.usrId, (err, user) => {
+            if(err) return res.status(500).json(err);
+            var project = user.project
+            var findProject = project.find(x => x._id == req.params.pid)
+            if(findProject) {
+                var categories = findProject.category
+                res.render('temp',{
+                    categories
+                })
+            }
+        })
+    }
 })
 
 
