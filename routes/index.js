@@ -307,9 +307,6 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
             }
         }
     })
-
 })
-
-
 
 module.exports = router

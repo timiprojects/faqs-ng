@@ -1,0 +1,76 @@
+<% include ../partials/header %>
+<div class="container">
+    <div class="cover nav navbar">
+        <h3 class="" style="text-transform:capitalize;">
+            My Account
+        </h3>
+    </div>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+                aria-controls="nav-home" aria-selected="true">Basic Settings</a>
+            <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab" aria-controls="nav-pass"
+                aria-selected="true">Change Password</a>
+            <a class="nav-item nav-link" id="nav-upgrade-tab" data-toggle="tab" href="#nav-upgrade" role="tab" aria-controls="nav-upgrade"
+                aria-selected="true">Upgrade</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="card-header">
+                <small>Make changes to your account here..</small>
+            </div>
+            <div class="row m-2">
+                <div class="col-md-6">
+                    <form action="/users/<%= user._id %>/myaccount" method="POST" name="basic">
+                        <div class="form-group">
+                            <label for="name">Company Name</label>
+                            <input type="text" name="name" id="name" value="<%= user.name %>" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Email</label>
+                            <input type="text" name="email" id="email" value="<%= user.email %>" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile</label>
+                            <input type="tel" name="mobile" id="mobile" value="<%= user.mobile %>" class="form-control">
+                            <small id="emailHelp" class="form-text text-muted">
+                                e.g +1(587)596-2239
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-pass" role="tabpanel" aria-labelledby="nav-pass-tab">
+            <div class="card-header">
+                <small>Update your Password to a more secure one..</small>
+            </div>
+            <div class="row m-2">
+                <div class="col-md-6">
+                    <form action="/users/<%= user._id %>/myaccount" method="POST" name="passrest">
+                        <div class="form-group">
+                            <label for="opassword">Old Password</label>
+                            <input type="password" name="opassword" id="opassword" value="<%= user.password %>" class="form-control"
+                                readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">New Password</label>
+                            <input type="password" name="password" id="password" value="" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpassword">Confirm Password</label>
+                            <input type="password" name="cpassword" id="cpassword" value="" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

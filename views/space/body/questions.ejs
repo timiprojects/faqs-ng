@@ -27,16 +27,15 @@
                         <% categories.forEach(function(elem) { 
                             if(elem._id == qval.cat) { %>
                         <div class="cat-structure">
-                            
-                                    <small style="font-style: italic; font-weight: 500;">
-                                        <%= elem.title %></small>
-                            
+                            <small style="font-style: italic; font-weight: 500;">
+                                <%= elem.title %></small>
                         </div>
                         <div class="flex-end">
                             <button class="btn btn-link" data-toggle="collapse" data-target="#<%= ids %>" aria-expanded="true"
                                 aria-controls="<%= ids %>">view <i class="fas fa-arrow-down"></i></button>
                             <button class="btn btn-link text-success"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-link text-danger" onclick="Delete('<%= proj_id %>','<%= elem._id %>', '<%= title %>', '<%= qval._id %>')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-link text-danger" onclick="Delete('<%= proj_id %>','<%= elem._id %>', '<%= title %>', '<%= qval._id %>')"><i
+                                    class="fas fa-trash"></i></button>
                         </div>
                         <% } }) %>
                     </div>
@@ -48,9 +47,9 @@
                 </li>
                 <% } %>
                 <% } else { %>
-                    <li class="list-item">
-                        No data to display
-                    </li>
+                <li class="list-item">
+                    No data to display
+                </li>
                 <% } %>
             </ul>
         </div>

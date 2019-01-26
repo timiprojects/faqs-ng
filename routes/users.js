@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
+const { ensureAuthenticated } = require('../config/auth')
 
 //load user model
 const User = require('../models/user')
@@ -105,5 +106,49 @@ router.get('/logout', (req, res) => {
     req.flash('success_msg', 'You are logged out');
     res.redirect('/users/login');
 });
+
+router.get('/:usr/myaccount', ensureAuthenticated, (req, res) => {
+    var user = req.user
+    if(req.params.usr != 'undefined' && user) {
+        if(user._id == req.params.usr) {
+            res.render('space/myaccount', {
+                user,
+                title: 'myaccount'
+            });
+        }
+    }
+})
+
+router.post('/:usr/myaccount', ensureAuthenticated, (req, res) => {
+    const {
+        email,
+        name,
+        mobile
+    } = req.body
+    let errors = []
+
+    if (!email || !name) {
+        errors.push({
+            msg: 'Please enter all fields'
+        })
+    } 
+
+    if(errors.length == 0) {
+        User.findOneAndUpdate({_id: req.user._id}, {
+            email,
+            name,
+            mobile
+        },{upsert: true, new: true}, (err, user) => {
+            if (err) {
+                req.flash('error_msg', 'Cannot update user account')
+                res.redirect(`/users/${req.params.usr}/myaccount`);
+            }
+
+            req.flash('success_msg', 'User account updated!!')
+            res.redirect(`/users/${req.params.usr}/myaccount`);
+            
+        })
+    }
+})
 
 module.exports = router

@@ -46,3 +46,10 @@ function genCode (pId, usrId) {
         `
     }
 }
+
+
+// const basic = document.basic
+
+// async function updateAct (name) {
+//     var data = await fetch
+// }
