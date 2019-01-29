@@ -4,28 +4,29 @@
     </h3>
 </div>
 <div class="row">
-    <dv class="col-md-6">
+    <div class="col-md-10">
         <h5 class="text-muted" style="font-weight: 100;">Generate code to put on your website</h5>
-        <fieldset>
-            <form action="" class="form py-3">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" placeholder="secret key" name="seckey" id="seckey" value="">
-                    <button type="button" class="btn btn-info" onclick="generateKey()">Generate Key</button>
-                </div>
-                <div class="form-group mb-2">
-                    <button type="button" class="btn btn-warning" onclick="genCode('<%= project._id %>', '<%= user._id %>')">Generate Code</button>
-                </div>
-            </form>
-        </fieldset>
-    </dv>
-    <div class="col-md-4">
-        <div class="card">
+        <div class="card mt-3 p-0 m-0 <%= ((project.isGenerated) ? 'disp':'n-disp') %>">
             <div class="card-header">
-                <h4 class="text-info" style="font-weight:200;">Copy Generated Code below</h4>
+                <small class="text-info" style="font-weight:200;">Copy Generated Code below</small>
             </div>
-            <div class="card-body p-2">
-                <textarea name="codebase" id="codebase" cols="" rows="5" class="form-control" readonly></textarea>
+            <div class="card-body p-0 m-0">
+                <figure class="highlight">
+                    <code class="language-html" data-lang="html">
+                        <span class="nt"><</span><span class="nt">iframe</span>
+                        <span class="na"> src=</span><span class="s">"<%= project.code %>"</span>
+                        <span class="na"> style=</span><span class="s">"display:block;width:100%;border:none
+                            !important;height:max-content;"</span>
+                        <span class="nt">><</span><span class="nt">/</span><span class="nt">iframe></span>
+                    </code>
+                </figure>
             </div>
+        </div>
+        <div class="my-3 <%= ((!project.isGenerated) ? 'disp':'n-disp') %>">
+            <form action="/v2/project/<%= project._id %>/settings" method="POST">
+                <input type="text" name="name" id="name" hidden>
+                <button class="btn btn-warning" type="submit" onclick="generate()">Generate Code</button>
+            </form>
         </div>
     </div>
 </div>

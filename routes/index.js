@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const bcrypt = require('bcryptjs')
 const {
     ensureAuthenticated
 } = require('../config/auth');
@@ -69,7 +70,7 @@ router.delete('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
 
         if (projects) {
             var index = projects.findIndex(x => x._id == del);
-            if(index) {
+            if (index) {
                 projects.splice(index, 1);
 
                 user.save().then(() => {
@@ -82,7 +83,7 @@ router.delete('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
                     throw err;
                 })
             }
-            
+
         }
     })
 })
@@ -125,19 +126,19 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
 
             categoryList = categoryArray[+current_page - 1];
 
-            
-                res.render('space/dashboard', {
-                    user: req.user,
-                    project: projId,
-                    proj_id: projId._id,
-                    title: req.params.f,
-                    categories: categoryList,
-                    per_page,
-                    totalCategories: len,
-                    pageCount,
-                    current_page
-                })
-            
+
+            res.render('space/dashboard', {
+                user: req.user,
+                project: projId,
+                proj_id: projId._id,
+                title: req.params.f,
+                categories: categoryList,
+                per_page,
+                totalCategories: len,
+                pageCount,
+                current_page
+            })
+
         } else if (req.params.f === 'questions') {
             for (let index = 0; index < cat.length; index++) {
                 var rev = cat[index].question;
@@ -157,7 +158,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 current_page = +req.query.page || 1;
             }
 
-            
+
 
             questionList = questionArray[+current_page - 1]
 
@@ -190,7 +191,7 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
         if (err) throw err;
 
         if (user.project) {
-            var proj = user.project.find(proj => proj._id == req.params.id)
+            var proj = user.project.find(x => x._id == req.params.id)
             if (proj) {
                 if (req.params.f === 'categories') {
                     var tim = proj.category
@@ -235,14 +236,72 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                                 req.flash(
                                     'success_msg',
                                     'Question created successfully'
-                                );
-                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                                )
+                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
                             }).catch((err) => {
                                 throw err;
                             })
                         }
                     }
+                } else if (req.params.f === 'settings') {
+                    var arr = "ABCDEFGHIJKLMNOPRSTUVWXYZ123456789abcdefghijlmnopqrstuvwxyz-_";
+                    var char = arr.length;
+                    var seckey = "";
+                    for (var i = 0; i < 10; i++) {
+                        seckey += arr.charAt(Math.round(Math.random() * char))
+                    }
+
+                    if (req.body.name != 'undefined') {
+                        proj.isGenerated = true,
+                        proj.code = `${req.body.name}/v2/${proj._id}/${seckey}/${req.user._id}`
+                        proj.seckey = seckey
+                        user
+                            .save()
+                            .then(() => {
+                                req.flash(
+                                    'success_msg',
+                                    'Code generated successfully!!'
+                                );
+                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
+                            })
+                            .catch(err => {
+                                req.flash(
+                                    'error_msg',
+                                    err
+                                );
+                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
+                            });
+                    }
                 }
+
+                //console.log(req.body.seckey)
+                // bcrypt.genSalt(5, (err, salt) => {
+                //     bcrypt.hash(seckey, salt, (err, hash) => {
+
+                //         seckey = hash;
+                //         proj.push({
+                //             isGenerated: true,
+                //             code: `${link}/v2/${proj._id}/${seckey}/${user._id}`
+                //         })
+                //         user
+                //             .save()
+                //             .then(user => {
+                //                 req.flash(
+                //                     'success_msg',
+                //                     'Code generated successfully!!'
+                //                 );
+                //                 res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
+                //             })
+                //             .catch(err => {
+                //                 req.flash(
+                //                     'error_msg',
+                //                     'No code generated!!'
+                //                 );
+                //                 res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
+                //             });
+                //     });
+                // });
+
             }
         }
     })
@@ -250,16 +309,18 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
 
 router.get('/v2/:pid/:seckey/:usrId', (req, res) => {
     var seckey = req.params.seckey
-    if(typeof seckey !== 'undefined' && !seckey.length < 10) {
+    if (typeof seckey !== 'undefined') {
         User.findById(req.params.usrId, (err, user) => {
-            if(err) return res.status(500).json(err);
+            if (err) return res.status(500).json(err);
             var project = user.project
             var findProject = project.find(x => x._id == req.params.pid)
-            if(findProject) {
-                var categories = findProject.category
-                res.render('temp',{
-                    categories
-                })
+            if (findProject) {
+                if(findProject.seckey === seckey) {
+                    var categories = findProject.category
+                    res.render('temp', {
+                        categories
+                    })
+                }
             }
         })
     }
@@ -274,7 +335,7 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
             var proj = user.project.find(proj => proj._id == req.params.id)
             if (proj) {
                 var tim = proj.category
-                if(req.params.f === 'categories') {
+                if (req.params.f === 'categories') {
                     var fin = tim.findIndex(x => x._id == req.params.del)
                     tim.splice(fin, 1)
                     user.save().then((response) => {
@@ -287,10 +348,10 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
                     })
                 } else if (req.params.f === 'questions') {
                     var findCat = tim.find(x => x._id == req.params.del)
-                    if(findCat) {
+                    if (findCat) {
                         var checkQuestion = findCat.question
                         var findQuestion = checkQuestion.findIndex(x => x._id == req.body.qId)
-                        if(findQuestion) {
+                        if (findQuestion) {
                             checkQuestion.splice(findQuestion, 1)
                             user.save().then((response) => {
                                 //console.log('Deleted')
@@ -303,10 +364,11 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
                         }
                     }
                 }
-                
+
             }
         }
     })
 })
+
 
 module.exports = router

@@ -46,7 +46,17 @@ const projectSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    category: [catSchema]
+    category: [catSchema],
+    isGenerated: {
+        type: Boolean,
+        default: false
+    },
+    seckey: {
+        type: String
+    },
+    code: {
+        type: String
+    }
 })
 mongoose.model('Project', projectSchema)
 
