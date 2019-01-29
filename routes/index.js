@@ -9,7 +9,9 @@ const {
 const User = require('../models/user')
 
 //WELCOME PAGE
-router.get('/', (req, res) => res.render('index'))
+router.get('/', (req, res) => res.render('index', {
+    user: req.user
+}))
 
 router.get('/v2/project', ensureAuthenticated, (req, res) => {
     res.render('welcome', {
