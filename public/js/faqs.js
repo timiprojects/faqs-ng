@@ -53,3 +53,25 @@ function generate() {
 // async function updateAct (name) {
 //     var data = await fetch
 // }
+
+(function(){
+    var kfield = document.querySelectorAll('[data-name="kfield"]')
+    kfield.forEach((_kfield) => {
+        // console.log(_kfield.innerText)
+        _kfield.innerText = digs(_kfield.innerText)
+    })
+    function digs (str) {
+        var thousand = 1000
+        var million = 1000000
+
+        if( str < thousand) return String(str)
+
+        if(str >= thousand && str <= million) {
+            return Math.round(str/thousand)+"K"
+        }
+
+        if(str >= million && str <= 1000000000) {
+            return Math.round(str/million)+"M"
+        }
+    }
+})();

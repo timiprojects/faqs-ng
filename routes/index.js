@@ -44,6 +44,7 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
                 errors,
                 title,
                 user: req.user,
+                date
             })
         } else {
             user.project.push({
@@ -113,26 +114,19 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
     var projId = project.find(proj => proj._id == req.params.id)
 
     if (projId) {
-
         var cat = projId.category
-
         var len = cat.length
-
         if (req.params.f === 'categories') {
             var pageCount = Math.round((cat.length / per_page) + 0.5)
 
             while (cat.length > 0) {
                 categoryArray.push(cat.splice(0, per_page))
             }
-
             //set current page if specifed as get variable (eg: /?page=2)
             if (typeof req.query.page !== 'undefined') {
                 current_page = +req.query.page;
             }
-
             categoryList = categoryArray[+current_page - 1];
-
-
             res.render('space/dashboard', {
                 user: req.user,
                 project: projId,
@@ -144,7 +138,6 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 pageCount,
                 current_page
             })
-
         } else if (req.params.f === 'questions') {
             for (let index = 0; index < cat.length; index++) {
                 var rev = cat[index].question;
@@ -153,21 +146,14 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                     questionNewList.push(rev[i])
                 }
             }
-
             var pageCount = Math.round((questionNewList.length / per_page) + 0.5)
-
             while (questionNewList.length > 0) {
                 questionArray.push(questionNewList.splice(0, per_page))
             }
-
             if (typeof req.query.page !== 'undefined') {
                 current_page = +req.query.page || 1;
             }
-
-
-
             questionList = questionArray[+current_page - 1]
-
             res.render('space/dashboard', {
                 user: req.user,
                 project: projId,
@@ -180,7 +166,6 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 pageCount,
                 current_page
             });
-
         } else {
             res.render('space/dashboard', {
                 user: req.user,
@@ -195,7 +180,6 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
 router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
     User.findById(req.user._id, (err, user) => {
         if (err) throw err;
-
         if (user.project) {
             var proj = user.project.find(x => x._id == req.params.id)
             if (proj) {
@@ -226,12 +210,10 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                 } else if (req.params.f === 'questions') {
                     var getCat = proj.category
                     var checkCat = getCat.find(x => x._id == req.body.cats)
-
                     //console.log(checkCat)
                     if (checkCat) {
                         var getQuestion = checkCat.question
                         var checkQuestion = getQuestion.find(x => x.question === req.body.question)
-
                         if (!checkQuestion) {
                             getQuestion.push({
                                 question: req.body.question,
@@ -256,7 +238,6 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                     for (var i = 0; i < 10; i++) {
                         seckey += arr.charAt(Math.round(Math.random() * char))
                     }
-
                     if (req.body.name != 'undefined') {
                         proj.isGenerated = true,
                         proj.code = `${req.body.name}/v2/${proj._id}/${seckey}/${req.user._id}`
@@ -279,40 +260,12 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                             });
                     }
                 }
-
-                //console.log(req.body.seckey)
-                // bcrypt.genSalt(5, (err, salt) => {
-                //     bcrypt.hash(seckey, salt, (err, hash) => {
-
-                //         seckey = hash;
-                //         proj.push({
-                //             isGenerated: true,
-                //             code: `${link}/v2/${proj._id}/${seckey}/${user._id}`
-                //         })
-                //         user
-                //             .save()
-                //             .then(user => {
-                //                 req.flash(
-                //                     'success_msg',
-                //                     'Code generated successfully!!'
-                //                 );
-                //                 res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
-                //             })
-                //             .catch(err => {
-                //                 req.flash(
-                //                     'error_msg',
-                //                     'No code generated!!'
-                //                 );
-                //                 res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
-                //             });
-                //     });
-                // });
-
             }
         }
     })
 })
 
+//CODE TO LOAD CONTENT FROM SITE GENERATED SCRIPT
 router.get('/v2/:pid/:seckey/:usrId', (req, res) => {
     var seckey = req.params.seckey
     if (typeof seckey !== 'undefined') {

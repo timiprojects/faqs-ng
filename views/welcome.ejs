@@ -12,11 +12,11 @@
             <div class="col-md-3 mt-3">
                 <div class="card p-3 project">
                     <a href="/v2/project/<%= project._id %>/overview">
-                        <h5 class="text-info light"><span>
-                                <%= project.title %></span> &rarr;</h5>
+                        <h6 class="text-info light"><span>
+                                <%= project.title %></span> &rarr;</h6>
                         <small class="text-muted">
                             <strong>Created: </strong><span>
-                                <%= date(project.date).startOf('day').fromNow()%></span>
+                                <%= date(project.date).calendar() %></span>
                         </small>
                     </a>
                     <!-- <form action="/v2/project/del/<%= project._id %>" method="POST" class="belt">
