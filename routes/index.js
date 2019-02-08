@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
+const date = require('moment')
 const {
     ensureAuthenticated
 } = require('../config/auth');
@@ -15,7 +16,8 @@ router.get('/', (req, res) => res.render('index', {
 
 router.get('/v2/project', ensureAuthenticated, (req, res) => {
     res.render('welcome', {
-        user: req.user
+        user: req.user,
+        date
     })
 
 })
@@ -48,10 +50,12 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
                 title
             })
             user.save().then((usr) => {
-                res.render('welcome', {
-                    user: usr,
-                    success_msg: `${title} created successfully`
-                })
+                // res.render('welcome', {
+                //     user: usr,
+                //     success_msg: ``
+                // })
+                req.flash('success_msg', `${title} created successfully`)
+                 res.redirect('/v2/project');
             }).catch((err) => console.log(err))
         }
     })

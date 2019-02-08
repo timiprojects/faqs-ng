@@ -16,7 +16,7 @@
                                 <%= project.title %></span> &rarr;</h5>
                         <small class="text-muted">
                             <strong>Created: </strong><span>
-                                <%= project.date.toString('d:m:y') %></span>
+                                <%= date(project.date).startOf('day').fromNow()%></span>
                         </small>
                     </a>
                     <!-- <form action="/v2/project/del/<%= project._id %>" method="POST" class="belt">
