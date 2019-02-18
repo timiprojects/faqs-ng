@@ -2,74 +2,93 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+    crossorigin="anonymous">
+  <style>
+    .list-group-item.active {
+        z-index: 2;
+        color: #000;
+        /* background-color: #EB6864;
+            border-color: #EB6864; */
+        background: #eee !important;
+        border-color: #eee !important;
+      }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row m-2">
-            <% if (typeof categories != 'undefined') { %>
-            <div class="col-md-4">
-                <div class="list-group" id="list-tab" role="tablist">
-                    <% categories.forEach(function(category) { %>
-                    <a class="list-group-item list-group-item-action" id="<%= category.alias %>-list" data-toggle="list"
-                        href="#<%= category.alias %>" role="tab" aria-controls="home">
-                        <%= category.title %>
-                    </a>
-                    <% }) %>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row m-2">
+      <% if (typeof categories != 'undefined') { %>
+      <div class="col-md-4">
+        <div class="list-group" id="list-tab" role="tablist">
+          <% categories.forEach(function(category) { let catv =
+            category.alias.replace(/[\?.,\s]/g, '').toLowerCase();%>
+          <button class="list-group-item list-group-item-action <%= ((categories[0] == category)?'active':'') %>" id="<%= catv %>-list"
+            data-toggle="list" href="#<%= catv %>" role="tab" aria-controls="home" data-name="listings">
+            <%= category.title %>
+          </button>
 
-            <div class="col-md-8">
-                <div class="tab-content" id="nav-tabContent">
-                    <% categories.forEach(function(category) { %>
-                    <div class="tab-pane fade" id="<%= category.alias %>" role="tabpanel" aria-labelledby="<%= category.alias %>-list">
-                        <ul class="ul accordion my-2" id="accordionExample">
-                            <% let getQuestions = category.question %>
-                            <% getQuestions.forEach(function(q) { 
-                                let ids = q.question.replace(/[\?.,\s]/g, '').toLowerCase();%>
-                            <li class="list-item my-2 card-new">
-                                <div class="card-header btn-control" id="headingOne">
-                                    <small class="">
-                                        <%= q.question %>
-                                    </small>
-                                    <div class="flex-end">
-                                        <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#<%= ids %>"
-                                            aria-expanded="true" aria-controls="<%= ids %>">view <i class="fas fa-arrow-down"></i></button>
-                                    </div>
-                                </div>
-                                <div id="<%= ids %>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <%= q.answer %>
-                                    </div>
-                                </div>
-                            </li>
-                            <% }) %>
-                        </ul>
-                    </div>
-                    <% }) %>
-                </div>
-
-            </div>
-
-            <% } %>
+          <% }) %>
         </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="tab-content" id="nav-tabContent">
+          <% categories.forEach(function(category) { let cata =
+            category.alias.replace(/[\?.,\s]/g, '').toLowerCase();%>
+          <div class="tab-pane fade <%= ((categories[0] == category)?'show active':'') %>" id="<%= cata %>" role="tabpanel"
+            aria-labelledby="<%= cata %>-list">
+            <div class="ul accordion my-2" id="<%= cata %>Example">
+              <% let getQuestions = category.question %>
+              <% getQuestions.forEach(function(q) {
+                let ids = q.question.replace(/[\?.,\s]/g, '').toLowerCase(); %>
+              <div class="list-item my-2 card-new" data-name="holder">
+                <input type="text" name="catid" value="<%= category._id %>" hidden>
+                <input type="text" name="qid" value="<%= q._id %>" hidden>
+                <div class="card-header btn-control" id="<%= q._id %>">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#<%= ids %>"
+                    aria-expanded="<%= ((categories[0] == category)?'true':'false') %>" aria-controls="<%= ids %>">
+                    <%= q.question %>
+                  </button>
+                </div>
+                <div id="<%= ids %>" class="collapse" aria-labelledby="<%= q._id %>" data-parent="#<%= cata %>Example"
+                  data-name="answer">
+                  <div class="card-body">
+                    <%= q.answer %>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+      <% } %>
     </div>
+  </div>
 
+  <form name="myname">
+    <input type="text" value="<%= usr_id %>" name="usrid" hidden />
+    <input type="text" value="<%= projectId._id %>" name="projid" hidden />
+    <input type="text" value="<%= projectId.seckey %>" name="sec" hidden />
+  </form>
 
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
+    <script src="/js/listings.js"></script>
 
-
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
+  <script>
+    
+  </script>
 </body>
 
 </html>

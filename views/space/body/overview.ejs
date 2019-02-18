@@ -59,8 +59,8 @@
                                         <div class="p-2">
                                             <small class="heading">
                                                 <strong class="text-muted">Categories:</strong>
-                                                <strong>
-                                                    <%= project.category.length || 0 %></strong>
+                                                <strong data-name="kfield">
+                                                    <%= project.category.length %></strong>
                                             </small>
                                         </div>
                                     </div>
@@ -77,11 +77,11 @@
                                                             for(j=0; j < _countq.length; j++) {
                                                                 ls.push(_countq)
                                                                 %>
-                                                                
+
                                                 <% }} %>
-                                                <strong>
-                                                        <%= ls.length %>
-                                                    </strong>
+                                                <strong data-name="kfield">
+                                                    <%= ls.length %>
+                                                </strong>
                                             </small>
                                         </div>
                                         <div class="con"></div>
@@ -91,12 +91,23 @@
                                                     <small class="px-2">Most Read Questions</small>
                                                     <small>clicks</small>
                                                 </li>
-                                                <div class="w-100">
+                                                <div class="w-100 question">
+                                                    <% if (project.category != 'undefined') { 
+                                                        let categories = project.category %>
+                                                    <% for (let i=0; i < categories.length; i++) { 
+                                                        let questions = categories[i].question %>
+                                                    <% for(let j=0; j < questions.length; j++) { %>
+                                                    <% if (questions[j].clicks > 2 ) { %>
                                                     <li class="overview-item py-2 text-info">
-                                                        <small class="px-2 o-cont">Lorem ipsum, dolor sit amet
-                                                            consectetur adipisicing elit. At odit rem neque hic.</small>
-                                                        <small class="" data-name="kfield">1000</small>
+                                                        <small class="px-2 o-cont">
+                                                            <%= questions[j].question %></small>
+                                                        <small class="kfield" data-name="kfield">
+                                                            <%= questions[j].clicks %> </small>
                                                     </li>
+                                                    <% } %>
+                                                    <% } %>
+                                                    <% } %>
+                                                    <% } %>
                                                 </div>
                                             </ul>
                                         </div>

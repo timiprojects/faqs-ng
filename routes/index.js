@@ -277,12 +277,51 @@ router.get('/v2/:pid/:seckey/:usrId', (req, res) => {
                 if(findProject.seckey === seckey) {
                     var categories = findProject.category
                     res.render('temp', {
-                        categories
+                        categories,
+                        projectId: findProject,
+                        usr_id: req.params.usrId
                     })
                 }
             }
         })
     }
+})
+
+//TRACK QUESTION CLICKS
+router.post('/v2/track', (req, res) => {
+    const { sec, pid, uid, cid, qid } = req.body
+    
+    req.headers["content-type"] == 'application/json'
+    req.headers["access-control-allow-origin"] == '*'
+
+    User.findById(uid, (err, user) => {
+        if(err) return  res.json(err)
+        if(user) {
+            var project = user.project
+            var getProject = project.find(x=>x._id == pid)
+            if(getProject){
+                if(getProject.seckey == sec) {
+                    var Cat = getProject.category
+                    var getCat = Cat.find(x=>x._id == cid)
+                    if(getCat) {
+                        var quest = getCat.question
+                        var getQ = quest.find(x=>x._id == qid)
+                        if(getQ) {
+                            getQ.clicks = (parseInt(getQ.clicks) + 1)
+                            user.save()
+                                .then(() => {
+                                    res.json(getQ.clicks)
+                                })
+                                .catch((err) => {
+                                     res.json(err);
+                                })
+                        }
+                         
+                    }
+                }
+            }
+        }
+    })
 })
 
 

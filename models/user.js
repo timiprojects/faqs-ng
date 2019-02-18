@@ -12,6 +12,10 @@ const QuestionSchema = new mongoose.Schema({
     cat: {
         type: String
     },
+    clicks: {
+        type: Number,
+        default: 0
+    },
     date: {
         type: Date,
         default: Date.now

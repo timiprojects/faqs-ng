@@ -22,7 +22,7 @@
                 </figure>
             </div>
         </div>
-        <div class="my-3 <%= ((!project.isGenerated) ? 'disp':'n-disp') %>">
+        <div class="my-3 ">
             <form action="/v2/project/<%= project._id %>/settings" method="POST">
                 <input type="text" name="name" id="name" hidden>
                 <button class="btn btn-warning" type="submit" onclick="generate()">Generate Code</button>

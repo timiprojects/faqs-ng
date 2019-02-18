@@ -11,8 +11,8 @@
                 aria-controls="nav-home" aria-selected="true">Basic Settings</a>
             <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab" aria-controls="nav-pass"
                 aria-selected="true">Change Password</a>
-            <a class="nav-item nav-link" id="nav-upgrade-tab" data-toggle="tab" href="#nav-upgrade" role="tab" aria-controls="nav-upgrade"
-                aria-selected="true">Upgrade</a>
+            <a class="nav-item nav-link" id="nav-upgrade-tab" data-toggle="tab" href="#nav-upgrade" role="tab"
+                aria-controls="nav-upgrade" aria-selected="true">Upgrade</a>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
@@ -36,6 +36,13 @@
                             <input type="tel" name="mobile" id="mobile" value="<%= user.mobile %>" class="form-control">
                             <small id="emailHelp" class="form-text text-muted">
                                 e.g +1(587)596-2239
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="color">Color</label>
+                            <input type="color" name="color" id="color" value="<%= user.color %>" class="form-control">
+                            <small id="emailHelp" class="form-text text-muted">
+                                e.g #ffffff or #fff (The color you choose here, displays on your generated questions page)
                             </small>
                         </div>
                         <div class="form-group">
