@@ -1,11 +1,13 @@
 <% include ./partials/header %>
+<div class="nav navbar" style="background-color: #eee;">
+    <div class="container">
+        <h6>PROJECTS</h6>
+        <a href="#modal" data-toggle="modal" class="btn btn-sm btn-info">&plus; New Project</a>
+    </div>
+</div>
 <div class="container">
     <div class="mx-auto ml-auto pt-3">
         <% include ./partials/message %>
-        <div class="cover nav navbar">
-            <h6>PROJECTS</h6>
-            <a href="#modal" data-toggle="modal" class="btn btn-sm btn-info">&plus; New Project</a>
-        </div>
         <div class="row pt-3">
             <% if(typeof user.project !== 'undefined') { %>
             <% user.project.forEach(function(project) { %>

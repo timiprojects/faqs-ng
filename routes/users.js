@@ -8,31 +8,31 @@ const { ensureAuthenticated } = require('../config/auth')
 const User = require('../models/user')
 
 //REGISTER PAGE
-router.get('/register', (req, res) => res.render('register'))
+router.get('/auth', (req, res) => res.render('register'))
 
 //REGISTER NEW USER
 router.post('/register', (req, res) => {
     const {
-        email,
+        uemail,
         name,
-        password,
+        upassword,
         cpassword
     } = req.body
     let errors = []
 
-    if (!email || !name || !password || !cpassword) {
+    if (!uemail || !name || !upassword || !cpassword) {
         errors.push({
             msg: 'Please enter all fields'
         })
     }
 
-    if (password != cpassword) {
+    if (upassword != cpassword) {
         errors.push({
             msg: 'Passwords do not match'
         });
     }
 
-    if (password.length < 6) {
+    if (upassword.length < 6) {
         errors.push({
             msg: 'Password must be at least 6 characters'
         });
@@ -41,14 +41,14 @@ router.post('/register', (req, res) => {
     if (errors.length > 0) {
         res.render('register', {
             errors,
-            email,
+            uemail,
             name,
-            password,
+            upassword,
             cpassword
         });
     } else {
         User.findOne({
-            email: email
+            email: uemail
         }).then(user => {
             if (user) {
                 errors.push({
@@ -56,16 +56,16 @@ router.post('/register', (req, res) => {
                 })
                 res.render('register', {
                     errors,
-                    email,
+                    uemail,
                     name,
-                    password,
+                    upassword,
                     cpassword
                 });
             } else {
                 const newUser = new User({
-                    email,
+                    email: uemail,
                     name,
-                    password
+                    password: upassword
                 })
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -78,7 +78,7 @@ router.post('/register', (req, res) => {
                                     'success_msg',
                                     'You are now registered and can log in'
                                 );
-                                res.redirect('/users/login');
+                                res.redirect('/users/auth');
                             })
                             .catch(err => console.log(err));
                     });
@@ -88,14 +88,11 @@ router.post('/register', (req, res) => {
     }
 })
 
-//LOGIN PAGE
-router.get('/login', (req, res) => res.render('login'))
-
 //USER LOGIN
-router.post('/login', (req, res, next) => {
+router.post('/auth', (req, res, next) => {
     passport.authenticate('local', {
         successRedirect: '/v2/project',
-        failureRedirect: '/users/login',
+        failureRedirect: '/users/auth',
         failureFlash: true
     })(req, res, next)
 })
@@ -104,7 +101,7 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
     req.logout();
     req.flash('success_msg', 'You are logged out');
-    res.redirect('/users/login');
+    res.redirect('/users/auth');
 });
 
 router.get('/:usr/myaccount', ensureAuthenticated, (req, res) => {

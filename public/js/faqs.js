@@ -1,3 +1,15 @@
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('login-container');
+
+signUpButton.addEventListener('click', () => {
+    container.classList.add('right-panel-active');
+});
+
+signInButton.addEventListener('click', () => {
+    container.classList.remove('right-panel-active');
+});
+
 //DELETE PROJECTS
 async function removeproject(projId) {
     let isBool = confirm('Are you you want to DELETE?')
