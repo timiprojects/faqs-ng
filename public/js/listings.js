@@ -1,7 +1,8 @@
 var $jq = jQuery.noConflict();
 $jq(document).ready(function () {
-
-
+    // document.documentElement.addEventListener('contextmenu', function(e){
+    //     e.preventDefault()
+    // })
     const myform = document.myname;
 
     var uid = myform.usrid.value;
@@ -28,10 +29,12 @@ $jq(document).ready(function () {
                 }
 
                 $jq.post(`${location.origin}/v2/track`, data, function (response) {
-                    console.log(response)
+                    
                 })
             }
         })
     })
+
+
 
 })

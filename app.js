@@ -7,7 +7,10 @@ const session = require('express-session')
 const path = require('path')
 const cors = require('cors')
 
+
 const app = express()
+
+const http = require('http').createServer(app)
 
 // Passport Config
 require('./config/passport')(passport);
@@ -69,6 +72,6 @@ app.use('/users', require('./routes/users'))
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });

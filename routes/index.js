@@ -310,10 +310,10 @@ router.post('/v2/track', (req, res) => {
                             getQ.clicks = (parseInt(getQ.clicks) + 1)
                             user.save()
                                 .then(() => {
-                                    res.json(getQ.clicks)
+                                    res.send({msg:'done'})
                                 })
                                 .catch((err) => {
-                                     res.json(err);
+                                     res.send(err);
                                 })
                         }
                          

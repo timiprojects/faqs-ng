@@ -78,9 +78,16 @@ router.post('/register', (req, res) => {
                                     'success_msg',
                                     'You are now registered and can log in'
                                 );
+                                
                                 res.redirect('/users/auth');
+                                
                             })
-                            .catch(err => console.log(err));
+                            .catch(err => {
+                                req.flash(
+                                    'error_msg',
+                                    'User registration failed'
+                                )
+                            });
                     });
                 });
             }
