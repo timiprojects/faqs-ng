@@ -1,5 +1,16 @@
 const mongoose = require('mongoose')
-
+const musersSchema = new mongoose.Schema({
+    device: {
+        type: String
+    },
+    country: String,
+    country_code: {
+        type: String,
+        unique: true
+    },
+    ip: String
+})
+mongoose.model('musers', musersSchema)
 const QuestionSchema = new mongoose.Schema({
     question: {
         type: String,
@@ -16,6 +27,7 @@ const QuestionSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    musers: [musersSchema],
     date: {
         type: Date,
         default: Date.now
@@ -51,6 +63,10 @@ const projectSchema = new mongoose.Schema({
         default: Date.now
     },
     category: [catSchema],
+    isActive: {
+        type: Number,
+        default: 0,
+    },
     isGenerated: {
         type: Boolean,
         default: false
@@ -79,6 +95,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    avatar: {
+        data: Buffer,
+        contentType: String
     },
     passwordResetToken: {
         type: String

@@ -19,7 +19,10 @@ router.get('/v2/project', ensureAuthenticated, (req, res) => {
         user: req.user,
         date
     })
-
+})
+router.get('/v2/photo', ensureAuthenticated, (req, res) => {
+    res.contentType(req.user.avatar.contentType)
+    res.send(req.user.avatar.data)
 })
 
 //CREATE NEW FAQ PAGE
@@ -31,7 +34,6 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
     let errors = []
     User.findById(userId, (err, user) => {
         if (err) throw err;
-
         var proj = user.project.find(proj => proj.title === title)
         if (proj) {
             errors.push({
@@ -56,17 +58,17 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
                 //     success_msg: ``
                 // })
                 req.flash('success_msg', `${title} created successfully`)
-                 res.redirect('/v2/project');
+                res.redirect('/v2/project');
             }).catch((err) => console.log(err))
         }
     })
 })
 
 //DELETE FAQ PAGE
-router.delete('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
+router.get('/v2/project/del', ensureAuthenticated, (req, res) => {
     const {
         del
-    } = req.params
+    } = req.body
     const {
         _id
     } = req.user
@@ -86,11 +88,11 @@ router.delete('/v2/project/del/:del', ensureAuthenticated, (req, res) => {
                         'Project deleted successfully'
                     )
                     res.redirect('/v2/project');
+                   
                 }).catch(err => {
                     throw err;
                 })
             }
-
         }
     })
 })
@@ -167,6 +169,7 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
                 current_page
             });
         } else {
+            var chart = require('chart.js')
             res.render('space/dashboard', {
                 user: req.user,
                 title: req.params.f,
@@ -174,6 +177,19 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
             })
         }
     }
+})
+
+router.get('/v2/project/:id', ensureAuthenticated, (req, res, next) => {
+    var { project } = req.user
+    var Project = project.find(proj => proj._id == req.params.id)
+    if(Project) {
+        res.status(200).json(Project)
+    } else {
+        res.status(500).json({
+            error: 'no data sent'
+        })
+    }
+    
 })
 
 //CREATE CATEGORIES AND QUESTIONS FOR A FAQ PAGE
@@ -240,7 +256,7 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                     }
                     if (req.body.name != 'undefined') {
                         proj.isGenerated = true,
-                        proj.code = `${req.body.name}/v2/${proj._id}/${seckey}/${req.user._id}`
+                            proj.code = `${req.body.name}/v2/${proj._id}/${seckey}/${req.user._id}`
                         proj.seckey = seckey
                         user
                             .save()
@@ -274,7 +290,7 @@ router.get('/v2/:pid/:seckey/:usrId', (req, res) => {
             var project = user.project
             var findProject = project.find(x => x._id == req.params.pid)
             if (findProject) {
-                if(findProject.seckey === seckey) {
+                if (findProject.seckey === seckey) {
                     var categories = findProject.category
                     res.render('temp', {
                         categories,
@@ -288,45 +304,77 @@ router.get('/v2/:pid/:seckey/:usrId', (req, res) => {
 })
 
 //TRACK QUESTION CLICKS
-router.post('/v2/track', (req, res) => {
-    const { sec, pid, uid, cid, qid } = req.body
-    
+router.post('/v2/track', ensureAuthenticated, (req, res) => {
     req.headers["content-type"] == 'application/json'
     req.headers["access-control-allow-origin"] == '*'
+    const {
+        sec,
+        pid,
+        uid,
+        cid,
+        qid,
+        country,
+        country_code,
+        device,
+        ip
+    } = req.body
 
-    User.findById(uid, (err, user) => {
-        if(err) return  res.json(err)
-        if(user) {
+    User.findById(req.user._id, (err, user) => {
+        if (err) return res.json(err)
+        if (user) {
             var project = user.project
-            var getProject = project.find(x=>x._id == pid)
-            if(getProject){
-                if(getProject.seckey == sec) {
+            var getProject = project.find(x => x._id == pid)
+            if (getProject) {
+                if (getProject.seckey == sec) {
                     var Cat = getProject.category
-                    var getCat = Cat.find(x=>x._id == cid)
-                    if(getCat) {
+                    var getCat = Cat.find(x => x._id == cid)
+                    if (getCat) {
                         var quest = getCat.question
-                        var getQ = quest.find(x=>x._id == qid)
-                        if(getQ) {
+                        var getQ = quest.find(x => x._id == qid)
+                        if (getQ) {
                             getQ.clicks = (parseInt(getQ.clicks) + 1)
                             user.save()
                                 .then(() => {
-                                    res.send({msg:'done'})
+                                    res.json({
+                                        msg: 'done'
+                                    })
                                 })
                                 .catch((err) => {
-                                     res.send(err);
+                                    res.json(err)
                                 })
                         }
-                         
                     }
                 }
             }
         }
     })
 })
-
+router.post('/activate/:id', ensureAuthenticated, (req, res) => {
+    var { isActive } = req.body
+    //console.log(isActive)
+    User.findById(req.user._id, (err, user) => {
+        if (err) {
+            req.flash('error_msg', 'Cannot go online')
+        }
+        if(user) {
+            var projects = user.project
+            var project = projects.find(x => x._id == req.params.id)
+            if(project) {
+                project.isActive = (isActive) ? 1 : 0;
+                
+                user.save().then(()=>{
+                    req.flash('success_msg', 'Gone Online')
+                     res.redirect(`/v2/project/${req.params.id}`);
+                }).catch(err => {
+                    req.flash('error_msg', err)
+                })
+            }
+        }
+    })
+})
 
 //DELETE QUESTIONS AND CATEGORIES FROM A FAQ PAGE
-router.delete('/v2/project/:id/:f/:del', (req, res) => {
+router.get('/v2/project/:id/:f/:del', (req, res) => {
     User.findById(req.user._id, (err, user) => {
         if (err) throw err;
         if (user.project) {
@@ -346,6 +394,7 @@ router.delete('/v2/project/:id/:f/:del', (req, res) => {
                     })
                 } else if (req.params.f === 'questions') {
                     var findCat = tim.find(x => x._id == req.params.del)
+                    
                     if (findCat) {
                         var checkQuestion = findCat.question
                         var findQuestion = checkQuestion.findIndex(x => x._id == req.body.qId)

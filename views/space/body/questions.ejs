@@ -31,11 +31,16 @@
                                 <%= elem.title %></small>
                         </div>
                         <div class="flex-end">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#<%= ids %>" aria-expanded="true"
-                                aria-controls="<%= ids %>">view <i class="fas fa-arrow-down"></i></button>
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#<%= ids %>"
+                                aria-expanded="true" aria-controls="<%= ids %>">view <i
+                                    class="fas fa-arrow-down"></i></button>
                             <button class="btn btn-link text-success"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-link text-danger" onclick="Delete('<%= proj_id %>','<%= elem._id %>', '<%= title %>', '<%= qval._id %>')"><i
                                     class="fas fa-trash"></i></button>
+                            <!-- <a href="/v2/project/<%= proj_id %>/questions/<%= elem._id %>?q=<%= qval._id %>"
+                                class="nav-link text-danger">
+                                <i class="fas fa-trash"></i>
+                            </a> -->
                         </div>
                         <% } }) %>
                     </div>
@@ -75,8 +80,8 @@
                     <input type="text" name="userId" id="userId" value="<%= user._id %>" hidden="hidden">
                     <div class="form-group">
                         <label for="question">Question</label>
-                        <input type="text" name="question" id="question" class="form-control" value="<%= typeof question !== 'undefined' ? question : '' %>"
-                            required>
+                        <input type="text" name="question" id="question" class="form-control"
+                            value="<%= typeof question !== 'undefined' ? question : '' %>" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Category</label>
@@ -93,8 +98,8 @@
                     </div>
                     <div class="form-group">
                         <label for="alias">Answer</label>
-                        <textarea type="text" name="answer" id="answer" class="form-control" value="<%= typeof answer !== 'undefined' ? answer : '' %>"
-                            required></textarea>
+                        <textarea type="text" name="answer" id="answer" class="form-control"
+                            value="<%= typeof answer !== 'undefined' ? answer : '' %>" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -6,6 +6,9 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const path = require('path')
 const cors = require('cors')
+const bodyParser = require('body-parser')
+const createError = require('http-errors')
+const cookieParser = require('cookie-parser')
 
 
 const app = express()
@@ -22,11 +25,19 @@ const db = require('./config/keys').mongoURI;
 mongoose
     .connect(
         db, {
-            useNewUrlParser: true
+            useNewUrlParser: true,
+            useCreateIndex: true
         }
     )
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.log(err));
+
+//EXPRESS BODY PARSER
+// app.use(express.urlencoded({
+//     extended: false
+// }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(cors())
 //EJS VIEW ENGINE
@@ -34,12 +45,7 @@ app.use(expressLayouts)
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname,'/public')))
 
-//EXPRESS BODY PARSER
-app.use(express.urlencoded({
-    extended: false
-}))
-
-
+app.use(cookieParser())
 
 // Express session
 app.use(
@@ -69,6 +75,20 @@ app.use(function (req, res, next) {
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/users'))
 
+//catch error 404 and forward to error handler
+app.use(function(req, res, next) {
+    next(createError(404))
+}) 
+
+// Error handler
+app.use(function (err, req, res, next) {
+    res.locals.error = err
+    res.locals.message = err.message
+
+    //render error page
+    res.status(err.status || 500);
+    res.render('error')
+})
 
 const PORT = process.env.PORT || 3000
 

@@ -1,17 +1,29 @@
 <div class="sidebar">
     <div class="container">
-        <small class="text-dark">CONTEXT 
-            <% if(typeof project != 'undefined') { %>
-                <strong class="text-info" style="text-transform:capitalize;">[<%= project.title %>]</strong>
-            <% } %>
-        </small>
+        <a href="/" class="brand-2 nav-link">
+            <img src="/images/logo.png" alt="fmq">
+        </a>
+    </div>
+    <div class="sidebar-nav">
         <ul class="nav">
-            <li class="nav-item"><a href="overview" class="nav-link <%= ((title == 'overview') ? 'active':'') %>"><i class="fas fa-snowflake">&nbsp;</i>Overview</a></li>
-            <li class="nav-item"><a href="categories" class="nav-link <%= ((title == 'categories') ? 'active':'') %>"><i class="fas fa-list-ol">&nbsp;</i>Categories</a></li>
-            <li class="nav-item"><a href="questions" class="nav-link <%= ((title == 'questions') ? 'active':'') %>"><i class="fas fa-question-circle">&nbsp;</i>Questions</a></li>
-            <li class="nav-item"><a href="settings" class="nav-link <%= ((title == 'settings') ? 'active':'') %>"><i class="fas fa-cog">&nbsp;</i>Settings</a></li>
-            <div class="dropdown-divider"></div>
-            <li class="nav-item"><a href="" class="nav-link"><i class="fas fa-headset">&nbsp;</i>Support</a></li>
+            <li class="nav-item">
+                <a href="questions" class="nav-link faqs-link faqs-link-style <%= ((title == 'questions') ? 'active':'') %>">
+                    <i class="fas fa-question-circle icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="categories" class="nav-link faqs-link faqs-link-style <%= ((title == 'categories') ? 'active':'') %>">
+                    <i class="fas fa-layer-group icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="overview" class="nav-link faqs-link faqs-link-style <%= ((title == 'overview') ? 'active':'') %>"><i class="fas fa-chart-bar icon"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="settings" class="nav-link faqs-link faqs-link-style <%= ((title == 'settings') ? 'active':'') %>"><i class="fas fa-code icon"></i>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

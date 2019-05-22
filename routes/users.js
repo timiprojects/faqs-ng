@@ -3,15 +3,43 @@ const router = express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const { ensureAuthenticated } = require('../config/auth')
+const nodemailer = require('nodemailer')
+const uploads = require('../config/uploadMidWare')
+const Resize = require('../config/resize')
+const path = require('path')
+const fs = require('fs')
 
 //load user model
 const User = require('../models/user')
+
+//mail transport
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    
+})
+
+let mailOptions = {
+    from: '<no-reply@faqs.ng>',
+    to: 'tdavidz@gmail.com',
+    subject: 'Testing this',
+    text: 'This has to work'
+}
 
 //REGISTER PAGE
 router.get('/auth', (req, res) => res.render('register'))
 
 //REGISTER NEW USER
-router.post('/register', (req, res) => {
+router.post('/register', uploads.single('avatar'), async (req, res) => {
+    // const imagePath = path.join(__dirname, '/public/images')
+    // const fileUpload = new Resize(imagePath)
+    var imagepath = fs.readFileSync(req.file.path)
+    var image_encode = imagepath.toString('base64')
+    var contentType = req.file.mimetype
+    var avatar = new Buffer(image_encode, 'base64')
+    var fileStream = {
+        data: avatar,
+        contentType: contentType
+    }
     const {
         uemail,
         name,
@@ -62,10 +90,12 @@ router.post('/register', (req, res) => {
                     cpassword
                 });
             } else {
+                // const filename = await fileUpload.save(req.file.buffer)
                 const newUser = new User({
                     email: uemail,
                     name,
-                    password: upassword
+                    password: upassword,
+                    avatar: fileStream,
                 })
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newUser.password, salt, (err, hash) => {

@@ -1,0 +1,32 @@
+<header>
+    <div class="faqs-header-container py-2">
+        <nav class="faqs-header-navbar">
+            <a class="nav-link faqs-link" href="/v2/project">
+                <i class="fas fa-folder faqs-subheader-icons"></i>
+                <span>My Projects</span>
+            </a>
+            <h5 class="text-center"><%= project.title %></h5>
+            <ul class="navbar faqs-header-navbar-item-right">
+                <li class="nav faqs-header-nav-item dropdown">
+                    <a class=" nav-link faqs-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                        aria-expanded="false">
+                        <div class="avatar">
+                            <img src="/v2/photo" class="faqs-avatar-item" alt="" />
+                        </div>
+                        <!-- <img src="https://i.pravatar.cc/100?img=3" class="faqs-avatar-item" alt=""> -->
+                        <span class="nav-link light "><%= user.name %></span>
+                    </a>
+                    <div class="dropdown-menu" x-placement="bottom-start"
+                        style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-20px, 40px, 0px);">
+                        <a class="dropdown-item btn-link" href="/users/<%= user._id %>/myaccount">My Account</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item btn-link" href="/users/logout">Logout</a>
+                    </div>
+                </li>
+                <li class="faqs-header-nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-cog">&nbsp;</i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>

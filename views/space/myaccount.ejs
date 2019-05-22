@@ -22,7 +22,7 @@
             </div>
             <div class="row m-2">
                 <div class="col-md-6">
-                    <form action="/users/<%= user._id %>/myaccount" method="POST" name="basic">
+                    <form action="/users/<%= user._id %>/myaccount" method="POST" name="basic" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="name">Company Name</label>
                             <input type="text" name="name" id="name" value="<%= user.name %>" class="form-control">
@@ -39,16 +39,22 @@
                             </small>
                         </div>
                         <div class="form-group">
-                            <label for="color">Color</label>
-                            <input type="color" name="color" id="color" value="<%= user.color %>" class="form-control">
-                            <small id="emailHelp" class="form-text text-muted">
-                                e.g #ffffff or #fff (The color you choose here, displays on your generated questions page)
-                            </small>
+                            <label for="color">Profile Photo</label>
+                            <input type="file" name="avatar" id="avatar" class="form-control">
                         </div>
                         <div class="form-group">
                             <button class="btn btn-success" type="submit">Update</button>
                         </div>
                     </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-img">
+                        <% if(user.avatar.data == "") { %>
+                            <img src="https://i.pravatar.cc/300?img=3" alt="<%= user.name %>"/>
+                        <% } else { %>
+                            <img src="/v2/photo" alt="<%= user.name %>" />
+                        <% } %>
+                    </div>
                 </div>
             </div>
         </div>

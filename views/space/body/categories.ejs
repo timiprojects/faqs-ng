@@ -20,7 +20,12 @@
                 <% if(categories) { %>
                 <% categories.forEach(function(category) { %>
                 <li class="list-item">
-                    <input type="text" value="<%= category.title %>" class="list-control">
+                    <form class="form-item" onsubmit="enableEdit('#ctitle', '#calias', '#save', '#edit')">
+                        <input type="text" id="ctitle" name="ctitle" value="<%= category.title %>" class="list-control" onchange="aliasName('ctitle', 'calias')" readonly="true">
+                        <input type="text" id="calias" name="calias" value="<%= category.alias %>" class="list-control" readonly="true">
+                        <button type="submit" class="btn btn-link text-success" id="edit"><i class="fas fa-edit"></i></button>
+                        <button type="submit" class="btn btn-link text-success" id="save"><i class="fas fa-save" hidden="true"></i></button>
+                    </form>
                     <div class="cat-structure">
                         <% if (typeof category.question != 'undefined') { %>
                         <small style="text-align: center; font-size: 13px; font-weight: 500; font-style: italic;">
@@ -30,9 +35,13 @@
                     </div>
                     <nav class="navbar">
                         <ul class="nav ml-auto">
-                            <li class="nav-item"><a href="" class="nav-link text-success"><i class="fas fa-edit"></i></a></li>
-                            <li class="nav-item"><a href="javascript:void(0)" onclick="Delete('<%= proj_id %>','<%= category._id %>', '<%= title %>', '')"
-                                    class="nav-link text-danger"><i class="fas fa-trash"></i></a></li>
+                            <li class="nav-item">
+                                <!-- <a href="javascript:void(0)" onclick="Delete('<%= proj_id %>','<%= category._id %>', '<%= title %>', '')"
+                                    class="nav-link text-danger"><i class="fas fa-trash"></i></a> -->
+                                <a href="/v2/project/<%= proj_id %>/categories/<%= category._id %>" class="nav-link text-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                 </li>
@@ -67,7 +76,7 @@
                     <div class="form-group">
                         <label for="title">Title</label>
                         <input type="text" name="title" id="title" class="form-control" value="<%= typeof title !== 'undefined' ? title : '' %>"
-                            required>
+                            required onchange="aliasName('title', 'alias')" maxlength="20">
                     </div>
                     <div class="form-group">
                         <label for="alias">Alias</label>
