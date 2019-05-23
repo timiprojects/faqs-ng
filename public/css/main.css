@@ -32,6 +32,7 @@ body {
     margin: 0;
     background: var(--gray);
     /* overflow: hidden !important; */
+    overflow: hidden;
 }
 .brand {
     display: block;
@@ -294,17 +295,30 @@ header {
     position: relative;
     text-align: center;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    padding: 5px 20px;
     transition: all 300ms ease-in-out;
-    border-radius: 5px;
+    
+}
+.fabtn-rounded-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--info);
+    color: var(--info);
+    padding: 15px;
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
 }
 
 .fabtn.fabtn-info {
     background: var(--info);
     color: var(--light);
+    padding: 5px 20px;
+    border-radius: 5px;
+    border: 1px solid var(--info);
 }
 
-.fabtn.fabtn-info:hover {
+.fabtn.fabtn-info:hover, .fabtn-rounded-info:hover {
     background: var(--dark-info) !important;
     color: var(--light) !important;
 }
@@ -478,4 +492,80 @@ header {
 }
 .icon {
     font-size: 22px;
+}
+.dash-content {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 430px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+.dash-body {
+    display: block;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: calc(100vmin - 59px)
+}
+.dash-side {
+    display: block;
+    background: var(--light);
+    height: 100%;
+    border-left: 1px solid rgba(0, 0, 0, 0.15);
+}
+.categories {
+    display: block;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    height: calc(100vmin - 250px)
+}
+.categories::-webkit-scrollbar, .dash-body::-webkit-scrollbar {
+    background: var(--gray);
+    width: 5px;
+}
+.categories::-webkit-scrollbar-thumb, .dash-body::-webkit-scrollbar-thumb {
+    background: var(--info);
+    border-radius: 5px;
+}
+.category-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 10px auto 30px;
+    width: 100%;
+    flex-wrap: nowrap;
+    align-items: center;
+    background: var(--light);
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid var(--gray);
+    margin-bottom: 10px;
+}
+.category-item .color {
+    display: inline-block;
+    height: 100%;
+}
+.category-content {
+    text-align: left;
+    width: 100%;
+    padding: 5px 15px;
+}
+.category-content .subheading, .category-content .subtitle {
+    padding: 0;
+    margin: 0;
+}
+.category-item .button {
+    position: relative;
+}
+.category-item .button::before {
+    position: absolute;
+    top: auto;
+    bottom: auto;
+    content: '';
+    width: 1px;
+    height: 100%;
+    background: var(--gray);
 }

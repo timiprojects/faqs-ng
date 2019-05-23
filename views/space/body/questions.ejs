@@ -1,70 +1,80 @@
-<div class="cover nav navbar">
-    <h3 class="" style="text-transform:capitalize;">
-        <%= title %>
-    </h3>
-    <a href="#modal" data-toggle="modal" class="btn btn-sm btn-primary">&plus; New Question</a>
-</div>
-<nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-            aria-controls="nav-home" aria-selected="true">All Questions</a>
-    </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <div class="search">
-            <% include ../../partials/pagination %>
+<section class="dash-content">
+    <div class="dash-body p-5">
+        <h3 class="subheading mb-5">
+            <span>Questions</span>
+            <% categories.forEach(function(cats) { 
+                let questions = []
+                questions.push(cats['question'])
+             }) %>
+            <span class="badge badge-blue"><%= (questions)? questions.length : 0 %></span>
+            
+        </h3>
+        <div class="faqs-tab-bar mb-5">
+            <small class="text-muted">search...</small>
+            <a href="#modal" data-toggle="modal" class="fabtn fabtn-info">
+                <i class="fas fa-plus"></i>
+                <span>Add Question</span>
+            </a>
         </div>
-        <div class=" data-cover my-2">
-            <ul class="ul accordion my-2" id="accordionExample">
-                <% if(questions) { %>
-                <% for(let i = 0; i < questions.length ; i++) { 
-                    let qval = questions[i];
-                    let ids = qval.question.replace(/[\?.,\s]/g, '').toLowerCase(); %>
-                <li class="list-item my-2 card-new">
-                    <div class="card-header btn-control" id="headingOne">
-                        <input type="text" value="<%= qval.question %>" class="list-control">
-                        <% categories.forEach(function(elem) { 
-                            if(elem._id == qval.cat) { %>
-                        <div class="cat-structure">
-                            <small style="font-style: italic; font-weight: 500;">
-                                <%= elem.title %></small>
-                        </div>
-                        <div class="flex-end">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#<%= ids %>"
-                                aria-expanded="true" aria-controls="<%= ids %>">view <i
-                                    class="fas fa-arrow-down"></i></button>
-                            <button class="btn btn-link text-success"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-link text-danger" onclick="Delete('<%= proj_id %>','<%= elem._id %>', '<%= title %>', '<%= qval._id %>')"><i
-                                    class="fas fa-trash"></i></button>
-                            <!-- <a href="/v2/project/<%= proj_id %>/questions/<%= elem._id %>?q=<%= qval._id %>"
-                                class="nav-link text-danger">
-                                <i class="fas fa-trash"></i>
-                            </a> -->
-                        </div>
-                        <% } }) %>
-                    </div>
-                    <div id="<%= ids %>" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                        <div class="card-body">
-                            <%= qval.answer %>
-                        </div>
-                    </div>
-                </li>
+        <div class="questions">
+                <% if(categories.length == 0) { %>
+                    <o class="">
+                        <small class=" text-danger">Create a new category to add questions!</small>
+                    </o>
                 <% } %>
-                <% } else { %>
-                <li class="list-item">
-                    No data to display
-                </li>
-                <% } %>
-            </ul>
+            <% categories.forEach(function(cat) { %>
+            <section class="mb-5">
+                <div class="cat-heading">
+                    <p class="subheading">
+                        <span><%= cat.title %></span>
+                        <span class="badge"
+                            style="background: <%= cat.color %>; color: white;">
+                            <%= (cat['question'])? cat['question'].length : 0 %></span>
+                    </p>
+                </div>
+                <ul class="ul accordion my-2" id="accordionExample">
+                    <% if(cat['question'].length == 0) { %>
+                        <li class="">
+                            <small class="text-danger">No question(s) for this category!</small>
+                        </li>
+                    <% } %>
+                    <% if(cat['question'].length != 0) { %>
+                    <% cat['question'].forEach(function(val) { 
+                        let domId = val.question.replace(/[\?.,\s]/g, '').toLowerCase(); %>
+                    <li class="list-item my-2 card-new" style="width: 100%;">
+                        <div class="card-header btn-control" id="headingOne">
+                            <input type="text" value="<%= val.question %>" class="list-control">
+                            <div class="flex-end">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#<%= domId %>"
+                                    aria-expanded="true" aria-controls="<%= domId %>">view <i
+                                        class="fas fa-arrow-down"></i></button>
+                                <button class="btn btn-link text-success"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                        <div id="<%= domId %>" class="collapse" aria-labelledby="headingOne"
+                            data-parent="#accordionExample">
+                            <div class="card-body">
+                                <%= val.answer %>
+                            </div>
+                        </div>
+                    </li>
+                    <% }) %>
+                    <% } %>
+                </ul>
+            </section>
+            <% }) %>
         </div>
     </div>
-    <!-- 
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->
-</div>
+    <% include ../../partials/categoryside %>
+</section>
 
-
+<!-- <script>
+    var colorArray = ['red', 'yellow', 'green', 'orange', 'purple', 'indigo', 'violet', 'ruby', 'cyan', 'tael']
+    const colorPick = document.querySelectorAll('#color');
+    for(let i = 0; i < colorPick.length; i++) {
+        colorPick[i].style.backgroundColor = colorArray[Math.floor(Math.random() * colorArray.length-1)];
+    }
+</script> -->
 
 <div class="modal fade show" id="modal">
     <div class="modal-dialog" role="document">
@@ -86,7 +96,6 @@
                     <div class="form-group">
                         <label for="category">Category</label>
                         <select name="cats" id="cats" class="form-control" required>
-                            <!-- <option value="0" selected="selected">Select Category</option> -->
                             <% if(typeof user.project != 'undefined') { %>
                             <% categories.forEach(function(category) { %>
                             <option value="<%= category._id %>">
@@ -110,3 +119,5 @@
         </div>
     </div>
 </div>
+
+<!-- //Categories -->

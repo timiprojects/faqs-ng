@@ -29,6 +29,7 @@ router.get('/v2/photo', ensureAuthenticated, (req, res) => {
 router.post('/v2/project', ensureAuthenticated, (req, res) => {
     const {
         title,
+        webUrl,
         userId
     } = req.body
     let errors = []
@@ -40,7 +41,6 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
                 msg: 'Project already exists'
             })
         }
-
         if (errors.length > 0) {
             res.render('welcome', {
                 errors,
@@ -50,49 +50,39 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
             })
         } else {
             user.project.push({
-                title
+                title,
+                webUrl
             })
-            user.save().then((usr) => {
+            user.save().then(() => {
                 // res.render('welcome', {
                 //     user: usr,
                 //     success_msg: ``
                 // })
-                req.flash('success_msg', `${title} created successfully`)
-                res.redirect('/v2/project');
+                // req.flash('success_msg', `${title} created successfully`)
+                res.redirect(req.originalUrl);
             }).catch((err) => console.log(err))
         }
     })
 })
 
 //DELETE FAQ PAGE
-router.get('/v2/project/del', ensureAuthenticated, (req, res) => {
-    const {
-        del
-    } = req.body
-    const {
-        _id
-    } = req.user
-
-    User.findById(_id, (err, user) => {
-        if (err) throw err;
+router.get('/v2/project/:id', ensureAuthenticated, (req, res) => {
+    
+    User.findById(req.user._id, (err, user) => {
+        if (err) return res.redirect('back');;
         var projects = user.project
-
         if (projects) {
-            var index = projects.findIndex(x => x._id == del);
-            if (index) {
+            var index = projects.findIndex(x => x._id == req.params.id);
                 projects.splice(index, 1);
-
                 user.save().then(() => {
-                    req.flash(
-                        'success_msg',
-                        'Project deleted successfully'
-                    )
-                    res.redirect('/v2/project');
-                   
+                    // req.flash(
+                    //     'success_msg',
+                    //     'Project deleted successfully'
+                    // )
+                    res.redirect(req.get('referer'));
                 }).catch(err => {
                     throw err;
                 })
-            }
         }
     })
 })
@@ -118,29 +108,30 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
     if (projId) {
         var cat = projId.category
         var len = cat.length
-        if (req.params.f === 'categories') {
-            var pageCount = Math.round((cat.length / per_page) + 0.5)
+        // if (req.params.f === 'categories') {
+        //     var pageCount = Math.round((cat.length / per_page) + 0.5)
 
-            while (cat.length > 0) {
-                categoryArray.push(cat.splice(0, per_page))
-            }
-            //set current page if specifed as get variable (eg: /?page=2)
-            if (typeof req.query.page !== 'undefined') {
-                current_page = +req.query.page;
-            }
-            categoryList = categoryArray[+current_page - 1];
-            res.render('space/dashboard', {
-                user: req.user,
-                project: projId,
-                proj_id: projId._id,
-                title: req.params.f,
-                categories: categoryList,
-                per_page,
-                totalCategories: len,
-                pageCount,
-                current_page
-            })
-        } else if (req.params.f === 'questions') {
+        //     while (cat.length > 0) {
+        //         categoryArray.push(cat.splice(0, per_page))
+        //     }
+        //     //set current page if specifed as get variable (eg: /?page=2)
+        //     if (typeof req.query.page !== 'undefined') {
+        //         current_page = +req.query.page;
+        //     }
+        //     categoryList = categoryArray[+current_page - 1];
+        //     res.render('space/dashboard', {
+        //         user: req.user,
+        //         project: projId,
+        //         proj_id: projId._id,
+        //         title: req.params.f,
+        //         categories: categoryList,
+        //         per_page,
+        //         totalCategories: len,
+        //         pageCount,
+        //         current_page
+        //     })
+        // } 
+        if (req.params.f === 'questions') {
             for (let index = 0; index < cat.length; index++) {
                 var rev = cat[index].question;
 
@@ -179,18 +170,17 @@ router.get('/v2/project/:id/:f', ensureAuthenticated, (req, res, next) => {
     }
 })
 
-router.get('/v2/project/:id', ensureAuthenticated, (req, res, next) => {
-    var { project } = req.user
-    var Project = project.find(proj => proj._id == req.params.id)
-    if(Project) {
-        res.status(200).json(Project)
-    } else {
-        res.status(500).json({
-            error: 'no data sent'
-        })
-    }
-    
-})
+// router.get('/v2/project/:id', ensureAuthenticated, (req, res, next) => {
+//     var { project } = req.user
+//     var Project = project.find(proj => proj._id == req.params.id)
+//     if(Project) {
+//         res.status(200).json(Project)
+//     } else {
+//         res.status(500).json({
+//             error: 'no data sent'
+//         })
+//     }
+// })
 
 //CREATE CATEGORIES AND QUESTIONS FOR A FAQ PAGE
 router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
@@ -205,23 +195,24 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                     if (!fin) {
                         proj.category.push({
                             title: req.body.title,
-                            alias: req.body.alias
+                            alias: req.body.alias,
+                            color: req.body.color
                         })
                         user.save().then(response => {
-                            req.flash(
-                                'success_msg',
-                                'Category created successfully'
-                            );
-                            res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                            // req.flash(
+                            //     'success_msg',
+                            //     'Category created successfully'
+                            // );
+                            res.redirect(req.get('referer'));
                         }).catch((err) => {
                             throw err;
                         })
                     } else {
-                        req.flash(
-                            'success_msg',
-                            'Category already exists'
-                        );
-                        res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                        // req.flash(
+                        //     'error_msg',
+                        //     'Category already exists'
+                        // );
+                        res.redirect(req.get('referer'));
                     }
                 } else if (req.params.f === 'questions') {
                     var getCat = proj.category
@@ -237,11 +228,11 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                                 cat: req.body.cats
                             })
                             user.save().then(response => {
-                                req.flash(
-                                    'success_msg',
-                                    'Question created successfully'
-                                )
-                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
+                                // req.flash(
+                                //     'success_msg',
+                                //     'Question created successfully'
+                                // )
+                                res.redirect(req.originalUrl)
                             }).catch((err) => {
                                 throw err;
                             })
@@ -349,32 +340,9 @@ router.post('/v2/track', ensureAuthenticated, (req, res) => {
         }
     })
 })
-router.post('/activate/:id', ensureAuthenticated, (req, res) => {
-    var { isActive } = req.body
-    //console.log(isActive)
-    User.findById(req.user._id, (err, user) => {
-        if (err) {
-            req.flash('error_msg', 'Cannot go online')
-        }
-        if(user) {
-            var projects = user.project
-            var project = projects.find(x => x._id == req.params.id)
-            if(project) {
-                project.isActive = (isActive) ? 1 : 0;
-                
-                user.save().then(()=>{
-                    req.flash('success_msg', 'Gone Online')
-                     res.redirect(`/v2/project/${req.params.id}`);
-                }).catch(err => {
-                    req.flash('error_msg', err)
-                })
-            }
-        }
-    })
-})
 
 //DELETE QUESTIONS AND CATEGORIES FROM A FAQ PAGE
-router.get('/v2/project/:id/:f/:del', (req, res) => {
+router.get('/v2/project/:id/:f/:del', ensureAuthenticated, (req, res) => {
     User.findById(req.user._id, (err, user) => {
         if (err) throw err;
         if (user.project) {
@@ -384,11 +352,8 @@ router.get('/v2/project/:id/:f/:del', (req, res) => {
                 if (req.params.f === 'categories') {
                     var fin = tim.findIndex(x => x._id == req.params.del)
                     tim.splice(fin, 1)
-                    user.save().then((response) => {
-                        //console.log('Deleted')
-                        req.flash('success_msg', 'category deleted!')
-                        //res.status(200).json('Deleted');
-                        res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                    user.save().then(() => {
+                        res.redirect(req.get('referer'));
                     }).catch((err) => {
                         throw err;
                     })
@@ -401,17 +366,13 @@ router.get('/v2/project/:id/:f/:del', (req, res) => {
                         if (findQuestion) {
                             checkQuestion.splice(findQuestion, 1)
                             user.save().then((response) => {
-                                //console.log('Deleted')
-                                req.flash('success_msg', 'question deleted!')
-                                //res.status(200).json('Deleted');
-                                res.redirect(`/v2/project/${req.params.id}/${req.params.f}`);
+                                res.redirect(req.originalUrl);
                             }).catch((err) => {
                                 throw err;
                             })
                         }
                     }
                 }
-
             }
         }
     })

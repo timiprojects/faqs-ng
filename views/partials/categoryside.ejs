@@ -1,0 +1,84 @@
+<div class="dash-side">
+    <div class="das-side-content pt-5 pb-5 px-4">
+        <div class="faqs-tab-bar">
+            <h4 class="subheading">
+                <span>Categories (5)</span>
+            </h4>
+            <a href="#Categories" data-toggle="modal" class="fabtn fabtn-rounded-info">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+        <ul class="nav categories mt-5">
+            <% categories.forEach(function(category) { %>
+            <li class="category-item">
+                <div class="color" id="color" style="background-color: <%= category.color %>"></div>
+                <div class="category-content">
+                    <p class="subheading"><%= category.title %></p>
+                    <small class="subtitle"><%= (category['question'])? category['question'].length : 0 %> Questions</small>
+                </div>
+                <div class="button dropleft">
+                    <a data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+                        class="nav-link faqs-link">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu px-2">
+                        <a class="mr-2 faqs-link nav-item text-success" href="#">
+                            <i class="fas fa-edit">&nbsp;</i>
+                            Edit
+                        </a>
+                        <a class="faqs-link nav-item text-danger"
+                            href="/v2/project/<%= proj_id %>/categories/<%= category._id %>">
+                            <i class="fas fa-trash">&nbsp;</i>
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </li>
+            <% }) %>
+            <% if(categories.length == 0) { %>
+            <li class="">
+                <small class="text-danger">No categories!</small>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+</div>
+
+
+
+<!-- Categories Modal -->
+<div class="modal fade show" id="Categories">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create new category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/v2/project/<%= proj_id %>/categories" method="POST">
+                <div class="modal-body">
+                    <input type="text" name="userId" id="userId" value="<%= user._id %>" hidden="hidden">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" name="title" id="title" class="form-control"
+                            value="<%= typeof title !== 'undefined' ? title : '' %>" required
+                            onchange="aliasName('title', 'alias')" maxlength="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="alias">Alias</label>
+                        <input type="text" name="alias" id="alias" class="form-control"
+                            value="<%= typeof alias !== 'undefined' ? alias : '' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alias">Color</label>
+                        <input type="color" name="color" id="color" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="fabtn fabtn-info">Done</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

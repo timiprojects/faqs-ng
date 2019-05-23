@@ -2,14 +2,10 @@
     <% include ../partials/sidebar %>
     <div class="side">
         <% include ../partials/head %>
-        <main class="">
-            <div class="container-fluid">
-                <section>
-                    <% if(typeof title !== 'undefined') { %>
-                    <%- include('./body/' + title) %>
-                    <% } %>
-                </section>
-            </div>
+        <main style="height: calc(100% - 59px);">
+            <% if(typeof title !== 'undefined') { %>
+            <%- include('./body/' + title) %>
+            <% } %>
         </main>
     </div>
 </div>

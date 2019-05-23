@@ -1,34 +1,34 @@
-<div class="cover nav navbar">
-    <h3 class="" style="text-transform:capitalize;">
-        <%= title %>
-        
-    </h3>
-</div>
-<hr>
-<div class="row">
-    <div class="col-md-10">
-        <h5 class="text-muted" style="font-weight: 100;">Generate code to put on your website</h5>
-        <div class="card mt-3 p-0 m-0 <%= ((project.isGenerated) ? 'disp':'n-disp') %>">
-            <div class="card-header">
-                <small class="text-info" style="font-weight:200;">Copy Generated Code below</small>
+<section class="dash-content">
+    <div class="p-5">
+        <h3 class="" style="text-transform:capitalize;">
+            <%= title %>
+        </h3>
+        <div class="body py-5">
+            <h5 class="text-muted" style="font-weight: 100;">Generate code to put on your website</h5>
+            <div class="card mt-3 p-0 m-0 <%= ((project.isGenerated) ? 'disp':'n-disp') %>">
+                <div class="card-header">
+                    <small class="text-info" style="font-weight:200;">Copy Generated Code below</small>
+                </div>
+                <div class="card-body p-0 m-0">
+                    <figure class="highlight">
+                        <code class="language-html" data-lang="html">
+                            <span class="nt">
+                                <</span> <span class="nt">iframe
+                            </span>
+                            <span class="na"> src=</span><span class="s">"<%= project.code %>"</span>
+                            <span class="na"> style=</span><span class="s">"display:block;width:100%;border:none
+                                !important;min-height:500px;" allow="geolocation"</span>
+                            <span class="nt">><</span> <span class="nt">/</span><span class="nt">iframe></span>
+                        </code>
+                    </figure>
+                </div>
             </div>
-            <div class="card-body p-0 m-0">
-                <figure class="highlight">
-                    <code class="language-html" data-lang="html">
-                        <span class="nt"><</span><span class="nt">iframe</span>
-                        <span class="na"> src=</span><span class="s">"<%= project.code %>"</span>
-                        <span class="na"> style=</span><span class="s">"display:block;width:100%;border:none
-                            !important;min-height:500px;" allow="geolocation"</span>
-                        <span class="nt">><</span><span class="nt">/</span><span class="nt">iframe></span>
-                    </code>
-                </figure>
+            <div class="my-3 ">
+                <form action="/v2/project/<%= project._id %>/settings" method="POST">
+                    <input type="text" name="name" id="name" hidden>
+                    <button class="fabtn fabtn-info" type="submit" onclick="generate()">Generate Code</button>
+                </form>
             </div>
-        </div>
-        <div class="my-3 ">
-            <form action="/v2/project/<%= project._id %>/settings" method="POST">
-                <input type="text" name="name" id="name" hidden>
-                <button class="btn btn-warning" type="submit" onclick="generate()">Generate Code</button>
-            </form>
         </div>
     </div>
-</div>
+</section>

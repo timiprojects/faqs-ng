@@ -45,6 +45,10 @@ const catSchema = new mongoose.Schema({
         required: true,
         lowercase: true
     },
+    color: {
+        type: String,
+        default: 'black',
+    },
     date: {
         type: Date,
         default: Date.now
@@ -61,6 +65,9 @@ const projectSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    webUrl: {
+        type: String,
     },
     category: [catSchema],
     isActive: {
