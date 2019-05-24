@@ -18,9 +18,15 @@
                     </a>
                     <div class="dropdown-menu" x-placement="bottom-start"
                         style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-20px, 40px, 0px);">
-                        <a class="dropdown-item btn-link" href="/users/<%= user._id %>/myaccount">My Account</a>
+                        <a class="dropdown-item nav-link faqs-link" href="/users/<%= user._id %>/myaccount">
+                            <i class="fas fa-user">&nbsp;</i>
+                            <span>My Account</span>
+                        </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item btn-link" href="/users/logout">Logout</a>
+                        <a class="dropdown-item nav-link faqs-link" href="/users/logout">
+                            <i class="fas fa-sign-out-alt">&nbsp;</i>
+                            <span>Logout</span>
+                        </a>
                     </div>
                 </li>
                 <li class="faqs-header-nav-item">

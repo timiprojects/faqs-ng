@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
-const { ensureAuthenticated } = require('../config/auth')
+const {
+    ensureAuthenticated
+} = require('../config/auth')
 const nodemailer = require('nodemailer')
 const uploads = require('../config/uploadMidWare')
 const Resize = require('../config/resize')
@@ -15,7 +17,7 @@ const User = require('../models/user')
 //mail transport
 let transporter = nodemailer.createTransport({
     service: 'gmail',
-    
+
 })
 
 let mailOptions = {
@@ -32,13 +34,22 @@ router.get('/auth', (req, res) => res.render('register'))
 router.post('/register', uploads.single('avatar'), async (req, res) => {
     // const imagePath = path.join(__dirname, '/public/images')
     // const fileUpload = new Resize(imagePath)
-    var imagepath = fs.readFileSync(req.file.path)
-    var image_encode = imagepath.toString('base64')
-    var contentType = req.file.mimetype
-    var avatar = new Buffer(image_encode, 'base64')
-    var fileStream = {
-        data: avatar,
-        contentType: contentType
+    var imagepath, image_encode, contentType, avatar = ""
+    var fileStream = {}
+    if (!req.file) {
+        fileStream = {
+            data: "",
+            contentType: "",
+        }
+    } else {
+        imagepath = fs.readFileSync(req.file.path)
+        image_encode = imagepath.toString('base64')
+        contentType = req.file.mimetype
+        avatar = new Buffer(image_encode, 'base64')
+        fileStream = {
+            data: avatar,
+            contentType: contentType
+        }
     }
     const {
         uemail,
@@ -60,11 +71,11 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
         });
     }
 
-    if (upassword.length < 6) {
-        errors.push({
-            msg: 'Password must be at least 6 characters'
-        });
-    }
+    // if (upassword.length < 6) {
+    //     errors.push({
+    //         msg: 'Password must be at least 6 characters'
+    //     });
+    // }
 
     if (errors.length > 0) {
         res.render('register', {
@@ -108,9 +119,9 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
                                     'success_msg',
                                     'You are now registered and can log in'
                                 );
-                                
+
                                 res.redirect('/users/auth');
-                                
+
                             })
                             .catch(err => {
                                 req.flash(
@@ -143,8 +154,8 @@ router.get('/logout', (req, res) => {
 
 router.get('/:usr/myaccount', ensureAuthenticated, (req, res) => {
     var user = req.user
-    if(req.params.usr != 'undefined' && user) {
-        if(user._id == req.params.usr) {
+    if (req.params.usr != 'undefined' && user) {
+        if (user._id == req.params.usr) {
             res.render('space/myaccount', {
                 user,
                 title: 'myaccount'
@@ -165,14 +176,19 @@ router.post('/:usr/myaccount', ensureAuthenticated, (req, res) => {
         errors.push({
             msg: 'Please enter all fields'
         })
-    } 
+    }
 
-    if(errors.length == 0) {
-        User.findOneAndUpdate({_id: req.user._id}, {
+    if (errors.length == 0) {
+        User.findOneAndUpdate({
+            _id: req.user._id
+        }, {
             email,
             name,
             mobile
-        },{upsert: true, new: true}, (err, user) => {
+        }, {
+            upsert: true,
+            new: true
+        }, (err, user) => {
             if (err) {
                 req.flash('error_msg', 'Cannot update user account')
                 res.redirect(`/users/${req.params.usr}/myaccount`);
@@ -180,7 +196,7 @@ router.post('/:usr/myaccount', ensureAuthenticated, (req, res) => {
 
             req.flash('success_msg', 'User account updated!!')
             res.redirect(`/users/${req.params.usr}/myaccount`);
-            
+
         })
     }
 })
