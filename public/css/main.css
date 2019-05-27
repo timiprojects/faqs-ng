@@ -159,20 +159,23 @@ header {
     justify-content: flex-start;
     width: 100%;
 }
+.faqs-list-group .list-group-item {
+    background: none !important;
+}
 
 .faqs-list-group .list-group-item, .faqs-link {
     display: inline-flex;
     align-items: center;
     flex-direction: row;
-    border: none;
+    border: none !important;
     color: #aaa;
 }
 
 .faqs-list-group .list-group-item.active, .faqs-link.active {
     z-index: 2;
     color: var(--info) !important;
-    background-color: transparent;
-    border: none;
+    background-color: none !important;
+    border: none !important;
     border-color: none;
 }
 .faqs-link.active, .faqs-link.faqs-link-style:hover {
@@ -453,6 +456,7 @@ header {
     border: none !important;
     border-bottom: 2px solid var(--info) !important;
     outline: none !important;
+    background: none !important;
 }
 .dashboard {
     display: grid;

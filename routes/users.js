@@ -14,21 +14,14 @@ const fs = require('fs')
 //load user model
 const User = require('../models/user')
 
-//mail transport
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-
-})
-
-let mailOptions = {
-    from: '<no-reply@faqs.ng>',
-    to: 'tdavidz@gmail.com',
-    subject: 'Testing this',
-    text: 'This has to work'
-}
-
 //REGISTER PAGE
-router.get('/auth', (req, res) => res.render('register'))
+router.get('/auth', (req, res) => {
+    if(req.user) {
+        return  res.redirect('/v2/project')
+    } else {
+        res.render('register')
+    }
+})
 
 //REGISTER NEW USER
 router.post('/register', uploads.single('avatar'), async (req, res) => {
@@ -90,11 +83,8 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
             email: uemail
         }).then(user => {
             if (user) {
-                errors.push({
-                    msg: 'This email is already registered'
-                })
+                req.flash('error_msg', 'Email already exists!')
                 res.render('register', {
-                    errors,
                     uemail,
                     name,
                     upassword,
@@ -116,12 +106,10 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
                             .save()
                             .then(user => {
                                 req.flash(
-                                    'success_msg',
+                                    'error_msg',
                                     'You are now registered and can log in'
                                 );
-
                                 res.redirect('/users/auth');
-
                             })
                             .catch(err => {
                                 req.flash(
@@ -138,17 +126,34 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
 
 //USER LOGIN
 router.post('/auth', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/v2/project',
-        failureRedirect: '/users/auth',
-        failureFlash: true
-    })(req, res, next)
+    // passport.authenticate('local', {
+    //     successRedirect: '/v2/project',
+    //     failureRedirect: '/users/auth',
+    //     failureFlash: 'res.statusMessage',
+
+    // })(req, res, next)
+    passport.authenticate('local', function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            req.flash('error_msg', 'User does not exist!')
+            res.redirect(req.originalUrl);
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                
+                return next(err);
+            }
+            return res.redirect('/v2/project')
+        });
+    })(req, res, next);
 })
 
 // Logout
 router.get('/logout', (req, res) => {
     req.logout();
-    req.flash('success_msg', 'You are logged out');
+    req.flash('error_msg', 'You are logged out');
     res.redirect('/users/auth');
 });
 
@@ -194,7 +199,7 @@ router.post('/:usr/myaccount', ensureAuthenticated, (req, res) => {
                 res.redirect(`/users/${req.params.usr}/myaccount`);
             }
 
-            req.flash('success_msg', 'User account updated!!')
+            req.flash('error_msg', 'User account updated!!')
             res.redirect(`/users/${req.params.usr}/myaccount`);
 
         })

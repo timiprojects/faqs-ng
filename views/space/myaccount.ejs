@@ -1,26 +1,37 @@
 <% include ../partials/header %>
-<div class="container">
-    <div class="cover nav navbar">
-        <h3 class="" style="text-transform:capitalize;">
+<div class="container py-5">
+    <div class="cover navbar">
+        
+        <h3 class="subheading" style="text-transform:capitalize;">
+            <a href="/v2/project" class=" faqs-link"><i class="fas fa-long-arrow-alt-left">&nbsp;</i></a>
             My Account
         </h3>
     </div>
-    <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-                aria-controls="nav-home" aria-selected="true">Basic Settings</a>
-            <a class="nav-item nav-link" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab" aria-controls="nav-pass"
-                aria-selected="true">Change Password</a>
-            <a class="nav-item nav-link" id="nav-upgrade-tab" data-toggle="tab" href="#nav-upgrade" role="tab"
-                aria-controls="nav-upgrade" aria-selected="true">Upgrade</a>
+    
+        <div class="list-group faqs-list-group" id="nav-tab" role="tablist">
+            <a class="list-group-item list-group-item-action show active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+                aria-controls="nav-home" aria-selected="true">
+                <i class="fas fa-cog">&nbsp;</i>
+                <span>Basic Settings</span>
+            </a>
+            <a class="list-group-item list-group-item-action" id="nav-pass-tab" data-toggle="tab" href="#nav-pass" role="tab" aria-controls="nav-pass"
+                aria-selected="true">
+                <i class="fas fa-key">&nbsp;</i>
+                <span>Change Password</span>
+            </a>
+            <a class="list-group-item list-group-item-action" id="nav-upgrade-tab" data-toggle="tab" href="#nav-upgrade" role="tab"
+                aria-controls="nav-upgrade" aria-selected="true">
+                <i class="fas fa-level-up-alt">&nbsp;</i>
+                <span>Upgrade</span>
+            </a>
         </div>
-    </nav>
+    
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="card-header">
                 <small>Make changes to your account here..</small>
             </div>
-            <div class="row m-2">
+            <div class="row my-4 p-3">
                 <div class="col-md-6">
                     <form action="/users/<%= user._id %>/myaccount" method="POST" name="basic" enctype="multipart/form-data">
                         <div class="form-group">

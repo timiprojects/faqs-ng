@@ -37,18 +37,12 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
         if (err) throw err;
         var proj = user.project.find(proj => proj.title === title)
         if (proj) {
-            errors.push({
-                msg: 'Project already exists'
-            })
-        }
-        if (errors.length > 0) {
-            res.render('welcome', {
-                errors,
-                title,
-                user: req.user,
-                date
-            })
-        } else {
+            // errors.push({
+            //     msg: 'Project already exists'
+            // })
+            req.flash('error_msg', 'Project already exists!');
+            res.redirect(req.originalUrl);
+        }else {
             user.project.push({
                 title,
                 webUrl
@@ -58,7 +52,7 @@ router.post('/v2/project', ensureAuthenticated, (req, res) => {
                 //     user: usr,
                 //     success_msg: ``
                 // })
-                // req.flash('success_msg', `${title} created successfully`)
+                req.flash('error_msg', `${title} project created successfully!`)
                 res.redirect(req.originalUrl);
             }).catch((err) => console.log(err))
         }
@@ -75,10 +69,10 @@ router.get('/v2/project/:id', ensureAuthenticated, (req, res) => {
             var index = projects.findIndex(x => x._id == req.params.id);
                 projects.splice(index, 1);
                 user.save().then(() => {
-                    // req.flash(
-                    //     'success_msg',
-                    //     'Project deleted successfully'
-                    // )
+                    req.flash(
+                        'error_msg',
+                        `Project deleted successfully!`
+                    )
                     res.redirect(req.get('referer'));
                 }).catch(err => {
                     throw err;
@@ -198,26 +192,26 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                             alias: req.body.alias,
                             color: req.body.color
                         })
-                        user.save().then(response => {
-                            // req.flash(
-                            //     'success_msg',
-                            //     'Category created successfully'
-                            // );
+                        user.save().then(() => {
+                            req.flash(
+                                'error_msg',
+                                'Category created successfully'
+                            );
                             res.redirect(req.get('referer'));
                         }).catch((err) => {
                             throw err;
                         })
                     } else {
-                        // req.flash(
-                        //     'error_msg',
-                        //     'Category already exists'
-                        // );
+                        req.flash(
+                            'error_msg',
+                            'Category already exists'
+                        );
                         res.redirect(req.get('referer'));
                     }
                 } else if (req.params.f === 'questions') {
                     var getCat = proj.category
                     var checkCat = getCat.find(x => x._id == req.body.cats)
-                    //console.log(checkCat)
+                   
                     if (checkCat) {
                         var getQuestion = checkCat.question
                         var checkQuestion = getQuestion.find(x => x.question === req.body.question)
@@ -228,10 +222,10 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                                 cat: req.body.cats
                             })
                             user.save().then(response => {
-                                // req.flash(
-                                //     'success_msg',
-                                //     'Question created successfully'
-                                // )
+                                req.flash(
+                                    'error_msg',
+                                    'Question added to Category!'
+                                )
                                 res.redirect(req.originalUrl)
                             }).catch((err) => {
                                 throw err;
@@ -253,7 +247,7 @@ router.post('/v2/project/:id/:f', ensureAuthenticated, (req, res) => {
                             .save()
                             .then(() => {
                                 req.flash(
-                                    'success_msg',
+                                    'error_msg',
                                     'Code generated successfully!!'
                                 );
                                 res.redirect(`/v2/project/${req.params.id}/${req.params.f}`)
@@ -353,6 +347,7 @@ router.get('/v2/project/:id/:f/:del', ensureAuthenticated, (req, res) => {
                     var fin = tim.findIndex(x => x._id == req.params.del)
                     tim.splice(fin, 1)
                     user.save().then(() => {
+                        req.flash('error_msg', 'Category successfully deleted!')
                         res.redirect(req.get('referer'));
                     }).catch((err) => {
                         throw err;
@@ -365,7 +360,8 @@ router.get('/v2/project/:id/:f/:del', ensureAuthenticated, (req, res) => {
                         var findQuestion = checkQuestion.findIndex(x => x._id == req.body.qId)
                         if (findQuestion) {
                             checkQuestion.splice(findQuestion, 1)
-                            user.save().then((response) => {
+                            user.save().then(() => {
+                                req.flash('error_msg', 'Question successfully deleted!')
                                 res.redirect(req.originalUrl);
                             }).catch((err) => {
                                 throw err;

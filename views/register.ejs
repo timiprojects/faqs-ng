@@ -1,12 +1,12 @@
 <link rel="stylesheet" href="/css/login.css" />
-<% include ./partials/message %>
+
 <div class="login-container" id="login-container">
   <div class="form-container sign-up-container">
     <!-- Sign Up form code goes here -->
     <form action="/users/register" method="POST" enctype="multipart/form-data">
       <h1>Create Account</h1>
       <span>Please fill in all fields</span>
-      <input type="text" placeholder="Name" id="name" name="name" value="<%= typeof name != 'undefined' ? name : '' %>"/>
+      <input type="text" placeholder="Company Name" id="name" name="name" value="<%= typeof name != 'undefined' ? name : '' %>"/>
       <input type="email" placeholder="Email" id="uemail" name="uemail" value="<%= typeof uemail != 'undefined' ? uemail : '' %>"/>
       <input type="password" placeholder="Password" id="upassword" name="upassword" autocomplete="false"/>
       <input type="password" placeholder="Confirm Password" id="cpassword" name="cpassword" autocomplete="false"/>

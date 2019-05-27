@@ -1,0 +1,21 @@
+<li class="nav faqs-header-nav-item dropdown">
+    <a class=" nav-link faqs-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+        aria-expanded="false">
+        <div class="avatar">
+            <img src="/v2/photo" class="faqs-avatar-item" alt="<%= user.name %>"
+                onerror="this.src='/images/placeholder.png';" />
+        </div>
+        <span class="dropdown-toggle nav-link light "><%= user.name %></span>
+    </a>
+    <div class="dropdown-menu" x-placement="bottom-start">
+        <a class="dropdown-item nav-link faqs-link" href="/users/<%= user._id %>/myaccount">
+            <i class="fas fa-user">&nbsp;</i>
+            <span>My Account</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item nav-link faqs-link" href="/users/logout">
+            <i class="fas fa-sign-out-alt">&nbsp;</i>
+            <span>Logout</span>
+        </a>
+    </div>
+</li>

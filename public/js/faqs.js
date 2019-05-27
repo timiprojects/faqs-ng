@@ -99,7 +99,7 @@ function digs(str) {
 
 function aliasName(title, alias) {
     var titles = $jq('#' + title).val()
-    console.log(titles)
+    
     var txt = titles.split(' ')
     // /(\s).+\s/
     var change = document.getElementById(alias)
