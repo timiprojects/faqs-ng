@@ -367,18 +367,22 @@ header {
 }
 
 .card-img {
-    display: inline-block;
-    width: 100%;
-    height: 350px;
+    display: block;
+    margin: auto;
+    width: 300px;
+    height: 300px;
     overflow: hidden;
+    border-radius: 100%;
+    border: 4px solid var(--info);
+    background: var(--info);
 }
 
 .card-img img {
-    display: inline-block;
+    display: block;
     margin: auto;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 /* Modal right style */

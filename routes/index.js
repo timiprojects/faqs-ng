@@ -20,10 +20,7 @@ router.get('/v2/project', ensureAuthenticated, (req, res) => {
         date
     })
 })
-router.get('/v2/photo', ensureAuthenticated, (req, res) => {
-    res.contentType(req.user.avatar.contentType)
-    res.send(req.user.avatar.data)
-})
+
 
 //CREATE NEW FAQ PAGE
 router.post('/v2/project', ensureAuthenticated, (req, res) => {

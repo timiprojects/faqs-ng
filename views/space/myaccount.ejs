@@ -1,13 +1,11 @@
 <% include ../partials/header %>
 <div class="container py-5">
     <div class="cover navbar">
-        
         <h3 class="subheading" style="text-transform:capitalize;">
             <a href="/v2/project" class=" faqs-link"><i class="fas fa-long-arrow-alt-left">&nbsp;</i></a>
             My Account
         </h3>
     </div>
-    
         <div class="list-group faqs-list-group" id="nav-tab" role="tablist">
             <a class="list-group-item list-group-item-action show active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
                 aria-controls="nav-home" aria-selected="true">
@@ -25,7 +23,6 @@
                 <span>Upgrade</span>
             </a>
         </div>
-    
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="card-header">
@@ -33,7 +30,7 @@
             </div>
             <div class="row my-4 p-3">
                 <div class="col-md-6">
-                    <form action="/users/<%= user._id %>/myaccount" method="POST" name="basic" enctype="multipart/form-data">
+                    <form action="/users/<%= user._id %>/myaccount" name="basic" enctype="multipart/form-data" method="POST">
                         <div class="form-group">
                             <label for="name">Company Name</label>
                             <input type="text" name="name" id="name" value="<%= user.name %>" class="form-control">
@@ -60,11 +57,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card card-img">
-                        <% if(user.avatar.data == "") { %>
-                            <img src="https://i.pravatar.cc/300?img=3" alt="<%= user.name %>"/>
-                        <% } else { %>
-                            <img src="/v2/photo" alt="<%= user.name %>" />
-                        <% } %>
+                        <img src="/users/photo" alt="<%= user.name %>" onerror="this.src='/images/placeholder.png';" />
                     </div>
                 </div>
             </div>

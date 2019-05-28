@@ -16,8 +16,8 @@ const User = require('../models/user')
 
 //REGISTER PAGE
 router.get('/auth', (req, res) => {
-    if(req.user) {
-        return  res.redirect('/v2/project')
+    if (req.user) {
+        return res.redirect('/v2/project')
     } else {
         res.render('register')
     }
@@ -39,6 +39,7 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
         image_encode = imagepath.toString('base64')
         contentType = req.file.mimetype
         avatar = new Buffer(image_encode, 'base64')
+        avatar = image_encode
         fileStream = {
             data: avatar,
             contentType: contentType
@@ -142,7 +143,7 @@ router.post('/auth', (req, res, next) => {
         }
         req.logIn(user, function (err) {
             if (err) {
-                
+
                 return next(err);
             }
             return res.redirect('/v2/project')
@@ -157,6 +158,7 @@ router.get('/logout', (req, res) => {
     res.redirect('/users/auth');
 });
 
+//get user details
 router.get('/:usr/myaccount', ensureAuthenticated, (req, res) => {
     var user = req.user
     if (req.params.usr != 'undefined' && user) {
@@ -169,41 +171,64 @@ router.get('/:usr/myaccount', ensureAuthenticated, (req, res) => {
     }
 })
 
-router.post('/:usr/myaccount', ensureAuthenticated, (req, res) => {
+//account update
+router.post('/:usr/myaccount', uploads.single('avatar'), ensureAuthenticated, (req, res) => {
+    var imagepath, image_encode, contentType, avatar = ""
+    var fileStream = {}
+
     const {
         email,
         name,
         mobile
     } = req.body
-    let errors = []
 
+    const updates = {
+        email,
+        name,
+        mobile
+    }
+
+    if(req.file) {
+        imagepath = fs.readFileSync(req.file.path)
+        image_encode = imagepath.toString('base64')
+        contentType = req.file.mimetype
+        avatar = new Buffer(image_encode, 'base64')
+        
+        updates.avatar.data = avatar
+        updates.avatar.contentType = contentType
+    }
+    let errors = []
     if (!email || !name) {
         errors.push({
             msg: 'Please enter all fields'
         })
     }
-
     if (errors.length == 0) {
         User.findOneAndUpdate({
             _id: req.user._id
         }, {
-            email,
-            name,
-            mobile
+            $set: updates
         }, {
             upsert: true,
-            new: true
+            new: true,
+
         }, (err, user) => {
             if (err) {
                 req.flash('error_msg', 'Cannot update user account')
-                res.redirect(`/users/${req.params.usr}/myaccount`);
+                res.redirect(req.originalUrl);
             }
 
             req.flash('error_msg', 'User account updated!!')
-            res.redirect(`/users/${req.params.usr}/myaccount`);
+            res.redirect(req.originalUrl);
 
         })
     }
+})
+
+//user image 
+router.get('/photo', ensureAuthenticated, (req, res) => {
+    res.contentType(req.user.avatar.contentType)
+    res.send(req.user.avatar.data)
 })
 
 module.exports = router
