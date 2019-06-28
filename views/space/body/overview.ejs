@@ -1,135 +1,18 @@
-<div class="cover nav navbar">
-    <h3 class="" style="text-transform:capitalize;">
-        <%= title %>
-    </h3>
-</div>
-<nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-            aria-controls="nav-home" aria-selected="true">Overview</a>
-    </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-        <!-- <div class="row my-2">
-            <div class="col-md-12">
-                <button type="button" class="btn btn-info">
-                    Categories
-                    <span class="badge badge-light">
-                        <% if (typeof project !== 'undefined') { let len = project.category%>
-                        <%= len.length %>
-                        <% } %>
-                    </span>
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    All Questions
-                    <span class="badge badge-light">
-                        <% if (typeof project !== 'undefined') { 
-                            let category = project.category
-                            let val = []
-                            for(let i = 0; i < category.length; i++) {
-                                val.push(category[i].question.length)
-                            }
-                            let total = val.reduce((a,b) => a + b, 0)
-                            %>
-                        <%= total %>
-                        <% } %>
-                    </span>
-                </button>
-            </div>
-        </div> -->
-        <div class="my-4">
-            <form action="" class="form w-100">
-                <fieldset class="fieldset">
-                    <legend class="legend">SANDBOX</legend>
-                    <div class="row p-0 m-0">
-                        <div class="col-md-4 p-3">
-                            <div class="py-2">
-                                <strong>
-                                    <h6 class="text-info text-sm"><i class="fas fa-circle text-success">&nbsp;</i>
-                                        <%= project.title %>
-                                    </h6>
-                                </strong>
-                                <input type="text" value="<%= project._id %>" name="projId" id="projId" hidden>
-                                    <label class="switch">
-                                        <input type="checkbox" id="myCheck" name="myCheck">
-                                        <span class="slider round"></span>
-                                    </label>
-                                
-                            </div>
-                        </div>
-                        <div class="col-md-8 bg-bright p-2">
-                            <div class="row p-0 m-0">
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="p-2">
-                                            <small class="heading">
-                                                <strong class="text-muted">Categories:</strong>
-                                                <strong data-name="kfield">
-                                                    <%= project.category.length %></strong>
-                                            </small>
-                                            <canvas id="myChart"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="p-2">
-                                            <small class="heading">
-                                                <strong class="text-muted">Questions:</strong>
-                                                <% let _count = project.category 
-                                                    let ls = []
-                                                    for(let i=0; i < _count.length; i++) {
-                                                         let _countq = _count[i].question
-                                                            for(j=0; j < _countq.length; j++) {
-                                                                ls.push(_countq)
-                                                                %>
-
-                                                <% }} %>
-                                                <strong data-name="kfield">
-                                                    <%= ls.length %>
-                                                </strong>
-                                            </small>
-                                        </div>
-                                        <div class="con"></div>
-                                        <div class="w-100">
-                                            <ul class="nav w-100">
-                                                <li class="overview-item head py-1">
-                                                    <small class="px-2">Most Read Questions</small>
-                                                    <small>clicks</small>
-                                                </li>
-                                                <div class="w-100 question">
-                                                    <% if (project.category != 'undefined') { 
-                                                        let categories = project.category %>
-                                                    <% for (let i=0; i < categories.length; i++) { 
-                                                        let questions = categories[i].question %>
-                                                    <% for(let j=0; j < questions.length; j++) { %>
-                                                    <% if (questions[j].clicks > 2 ) { %>
-                                                    <li class="overview-item py-2 text-info">
-                                                        <small class="px-2 o-cont">
-                                                            <%= questions[j].question %></small>
-                                                        <small class="kfield" data-name="kfield">
-                                                            <%= questions[j].clicks %> </small>
-                                                    </li>
-                                                    <% } %>
-                                                    <% } %>
-                                                    <% } %>
-                                                    <% } %>
-                                                </div>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+<section class="dash-content-lg">
+    <div class="dash-body p-5">
+        <div class="faqs-tab-bar mb-5">
+            <small class="text-muted">search...</small>
+            <a href="#modal" data-toggle="modal" class="fabtn fabtn-info">
+                <i class="fas fa-plus"></i>
+                <span>Add Question</span>
+            </a>
+        </div>
+        <div class="questions">
+            
         </div>
     </div>
-    <!-- <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div> -->
-    <!-- <script src="https://unpkg.com/moment"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
-    <script src="/js/chart.js"></script>
-</div>
+    <div class="dash-side">
+        <div class="das-side-content pt-5 pb-5 px-4">
+        </div>
+    </div>
+</section>

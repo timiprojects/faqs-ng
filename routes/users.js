@@ -19,6 +19,14 @@ router.get('/auth', (req, res) => {
     if (req.user) {
         return res.redirect('/v2/project')
     } else {
+        res.render('login')
+    }
+})
+
+router.get('/register', (req, res)=>{
+    if (req.user) {
+        return res.redirect('/v2/project')
+    } else {
         res.render('register')
     }
 })
@@ -46,23 +54,24 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
         }
     }
     const {
-        uemail,
+        email,
         name,
-        upassword,
+        password,
         cpassword
     } = req.body
     let errors = []
 
-    if (!uemail || !name || !upassword || !cpassword) {
+    if (!email || !name || !password || !cpassword) {
         errors.push({
             msg: 'Please enter all fields'
         })
     }
 
-    if (upassword != cpassword) {
+    if (password != cpassword) {
         errors.push({
             msg: 'Passwords do not match'
         });
+        req.flash('error_msg', 'Passwords do not match!')
     }
 
     // if (upassword.length < 6) {
@@ -74,9 +83,9 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
     if (errors.length > 0) {
         res.render('register', {
             errors,
-            uemail,
+            email,
             name,
-            upassword,
+            password,
             cpassword
         });
     } else {
@@ -86,17 +95,17 @@ router.post('/register', uploads.single('avatar'), async (req, res) => {
             if (user) {
                 req.flash('error_msg', 'Email already exists!')
                 res.render('register', {
-                    uemail,
+                    email,
                     name,
-                    upassword,
+                    password,
                     cpassword
                 });
             } else {
                 // const filename = await fileUpload.save(req.file.buffer)
                 const newUser = new User({
-                    email: uemail,
+                    email,
                     name,
-                    password: upassword,
+                    password,
                     avatar: fileStream,
                 })
                 bcrypt.genSalt(10, (err, salt) => {
