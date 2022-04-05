@@ -24,7 +24,7 @@
     "http": "0.0.0",
     "http-errors": "^1.7.2",
     "i18n": "^0.8.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongoose": "^5.4.10",
     "multer": "^1.4.1",
     "node-snackbar": "^0.1.15",
